@@ -2,260 +2,343 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Straw Market | ตลาดซื้อขายฟางออนไลน์</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
+    :root {
+        /* เปลี่ยนเป็นโทนสีเขียวเข้ม */
+        --primary: #064e3b; /* Emerald 900 */
+        --secondary: #15803d; /* Green 700 */
+        --accent: #10b981; /* Emerald 500 */
+        --bg-light: #f0fdf4; /* Green 50 */
+        --text-main: #022c22;
+    }
+
     body { 
         font-family: 'Prompt', sans-serif; 
-        background-color: #f7f3f0; /* สีดินอ่อน */
-        color: #3e2723; /* สีน้ำตาลเข้ม */
+        background-color: var(--bg-light); 
+        color: var(--text-main); 
         -webkit-tap-highlight-color: transparent; 
     }
-    
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: #efebe9; }
-    ::-webkit-scrollbar-thumb { background: #a1887f; border-radius: 10px; }
-    
-    /* Dialog Animation */
-    dialog {
-        transition: opacity 0.25s ease, transform 0.25s ease, display 0.25s allow-discrete;
-        opacity: 0;
-        transform: translateY(20px);
+
+    body.no-scroll {
+        overflow: hidden;
     }
-    dialog[open] { opacity: 1; transform: translateY(0); }
-    @starting-style { dialog[open] { opacity: 0; transform: translateY(20px); } }
-    dialog::backdrop { background: rgba(62, 39, 35, 0.5); backdrop-filter: blur(4px); }
     
-    #imageSlider { transition: all 0.3s ease; }
-    .slider-hidden { opacity: 0; pointer-events: none; visibility: hidden; }
-    .slider-visible { opacity: 1; pointer-events: auto; visibility: visible; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #d1fae5; }
+    ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+    
+    dialog {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+        border: none;
+        outline: none;
+    }
+    dialog[open] { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+    }
+    dialog::backdrop { 
+        background: rgba(2, 44, 34, 0.7); 
+        backdrop-filter: blur(8px); 
+    }
+    
+    .transition-all-300 { transition: all 0.3s ease; }
+    
+    .slider-hidden { opacity: 0; pointer-events: none; transform: scale(1.1); }
+    .slider-visible { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-    .btn-animate:active { transform: scale(0.95); }
+    .btn-animate:active { transform: scale(0.96); }
+    
+    .glass-nav {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+    }
 
-    /* ปรับแต่ง Card ให้ดูสะอาดตาใน 3 คอลัมน์ */
-    .card-text-size { font-size: 0.65rem; }
-    @media (min-width: 640px) {
-        .card-text-size { font-size: 0.875rem; }
+    .custom-shadow {
+        box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.1), 0 8px 10px -6px rgba(6, 78, 59, 0.1);
+    }
+
+    input, select, textarea {
+        transition: all 0.2s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+        border-color: var(--secondary) !important;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+
+    .field-error {
+        border-color: #ef4444 !important;
+        background-color: #fef2f2 !important;
+    }
+
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
     }
 </style>
 </head>
-<body class="min-h-screen flex flex-col pb-safe">
+<body class="min-h-screen flex flex-col">
 
-<!-- Header Section - โทนสีดิน -->
-<nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-stone-200">
+<!-- Header Section -->
+<nav class="glass-nav border-b border-emerald-100 sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-      <div class="flex items-center gap-2 cursor-pointer group" onclick="refreshApp()">
-        <div class="bg-gradient-to-tr from-[#795548] to-[#a1887f] text-white p-2 rounded-xl shadow-lg group-hover:rotate-6 transition-transform">
-            <i class="fa-solid fa-seedling text-lg"></i>
+      <div class="flex items-center gap-3 cursor-pointer group" onclick="refreshApp()">
+        <div class="bg-gradient-to-tr from-[#064e3b] to-[#10b981] text-white p-2.5 rounded-2xl shadow-lg group-hover:rotate-6 transition-all-300">
+            <i class="fa-solid fa-wheat-awn text-xl"></i>
         </div>
-        <div>
-            <span class="font-bold text-lg sm:text-xl text-[#3e2723] tracking-tight block leading-none">Straw<span class="text-[#8d6e63]">Market</span></span>
-            <span class="text-[9px] text-[#a1887f] font-medium uppercase tracking-widest">Earth & Agriculture</span>
+        <div class="hidden xs:block">
+            <span class="font-bold text-lg sm:text-xl text-[#064e3b] tracking-tight block leading-none">Straw<span class="text-[#10b981]">Market</span></span>
+            <span class="text-[9px] sm:text-[10px] text-[#059669] font-bold uppercase tracking-[0.2em]">Agri-Marketplace</span>
         </div>
       </div>
       
-      <div class="hidden md:flex items-center gap-3">
-         <select id="filter_province_desktop" class="border border-stone-200 rounded-xl px-4 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#8d6e63] text-stone-800 cursor-pointer">
-            <option value="all">ทุกจังหวัด</option>
-         </select>
-         <div class="relative">
-             <input id="q_desktop" type="text" placeholder="ค้นหาฟางก้อน..." class="pl-10 pr-4 py-2 border border-stone-200 rounded-xl text-sm focus:ring-2 focus:ring-[#8d6e63] w-64 outline-none">
-             <i class="fa-solid fa-search absolute left-3.5 top-3 text-stone-400"></i>
+      <!-- Desktop Actions -->
+      <div class="hidden lg:flex items-center gap-4">
+         <div class="flex bg-emerald-50 p-1 rounded-2xl border border-emerald-100">
+             <select id="filter_province_desktop" class="bg-transparent px-4 py-2 text-sm outline-none cursor-pointer border-r border-emerald-100 text-[#064e3b] font-medium">
+                <option value="all">ทุกจังหวัด</option>
+             </select>
+             <div class="relative">
+                 <input id="q_desktop" type="text" placeholder="ค้นหาฟางก้อน..." class="bg-transparent pl-10 pr-4 py-2 text-sm w-56 outline-none text-[#064e3b]">
+                 <i class="fa-solid fa-search absolute left-4 top-2.5 text-emerald-400"></i>
+             </div>
          </div>
-         <button onclick="openNewPostModal()" class="bg-[#5d4037] hover:bg-[#3e2723] text-white px-5 py-2 rounded-xl shadow-md flex items-center gap-2 btn-animate font-medium transition-colors">
+         <button onclick="openNewPostModal()" class="bg-[#064e3b] hover:bg-[#022c22] text-white px-6 py-2.5 rounded-xl shadow-xl flex items-center gap-2 btn-animate font-bold transition-all-300 text-sm">
             <i class="fa-solid fa-plus-circle"></i> ลงประกาศ
          </button>
       </div>
       
-      <div class="md:hidden">
-         <button onclick="openNewPostModal()" class="bg-[#8d6e63] text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
-            <i class="fa-solid fa-plus"></i>
+      <!-- Mobile Actions -->
+      <div class="lg:hidden flex items-center gap-2">
+         <button onclick="openNewPostModal()" class="bg-[#064e3b] text-white w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+            <i class="fa-solid fa-plus text-lg"></i>
          </button>
       </div>
   </div>
 </nav>
 
-<!-- Mobile Search - 3 Column Stability -->
-<div class="md:hidden bg-white border-b border-stone-100 p-2 sticky top-16 z-30 shadow-sm">
-    <div class="flex gap-1.5">
-        <select id="filter_province_mobile" class="border border-stone-100 rounded-lg px-2 py-1.5 text-xs bg-stone-50 outline-none w-1/3 text-stone-800">
+<!-- Mobile Search Bar -->
+<div class="lg:hidden bg-white/80 backdrop-blur-md border-b border-emerald-50 p-2 sticky top-16 z-40">
+    <div class="flex gap-1.5 max-w-2xl mx-auto">
+        <select id="filter_province_mobile" class="border border-emerald-100 rounded-xl px-2 py-1.5 text-[10px] bg-emerald-50 outline-none w-[35%] font-medium text-[#064e3b]">
             <option value="all">ทุกที่</option>
         </select>
-        <div class="relative w-2/3">
-            <input id="q_mobile" type="text" placeholder="ค้นหาประกาศ..." class="w-full pl-8 pr-3 py-1.5 bg-stone-50 border border-stone-100 rounded-lg text-xs outline-none">
-            <i class="fa-solid fa-search absolute left-2.5 top-2 text-stone-400"></i>
+        <div class="relative w-[65%]">
+            <input id="q_mobile" type="text" placeholder="ค้นหาประกาศ..." class="w-full pl-8 pr-2 py-1.5 bg-emerald-50 border border-emerald-100 rounded-xl text-[10px] outline-none text-[#064e3b]">
+            <i class="fa-solid fa-search absolute left-3 top-2 text-emerald-400"></i>
         </div>
     </div>
 </div>
 
-<main class="flex-grow max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6 w-full">
-    <div class="mb-6 px-2 text-center sm:text-left">
-        <h1 class="text-xl sm:text-3xl font-bold text-[#3e2723]">ตลาดฟางข้าวอัดก้อน</h1>
-        <p class="text-[#8d6e63] text-xs sm:text-sm mt-1">ซื้อ-ขาย ฟางข้าวคุณภาพดี</p>
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+    <div class="mb-6 text-center sm:text-left">
+        <div class="inline-block bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider mb-2">Community Hub</div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-[#064e3b] tracking-tight">ตลาดฟางข้าวอัดก้อน</h1>
+        <p class="text-[#059669] text-xs sm:text-lg mt-1 font-medium opacity-80">แหล่งรวมประกาศซื้อ-ขาย ฟางคุณภาพดีเพื่อเกษตรกรไทย</p>
     </div>
     
     <div id="loading" class="flex flex-col items-center justify-center py-20 hidden">
-        <div class="w-10 h-10 border-4 border-stone-200 border-t-[#8d6e63] rounded-full animate-spin mb-4"></div>
-        <p class="text-stone-500 text-sm">กำลังโหลด...</p>
+        <div class="w-10 h-10 border-4 border-emerald-100 border-t-[#064e3b] rounded-full animate-spin mb-4"></div>
+        <p class="text-emerald-700 font-medium text-sm">กำลังเตรียมข้อมูลจาก Google Sheets...</p>
     </div>
     
-    <!-- ปรับเป็น 3 คอลัมน์บนมือถือ (grid-cols-3) -->
-    <section id="board" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-6 pb-12"></section>
+    <section id="board" class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-6 pb-12"></section>
 
-    <div id="pagination" class="flex justify-center items-center gap-3 pb-12">
-        <button onclick="changePage(-1)" id="btnPrev" class="w-9 h-9 bg-white border border-stone-200 rounded-lg flex items-center justify-center text-stone-900 hover:bg-stone-50 disabled:opacity-30 transition-all"><i class="fa-solid fa-chevron-left text-xs"></i></button>
-        <span id="pageIndicator" class="text-xs font-bold text-stone-700 bg-stone-100 px-4 py-2 rounded-lg border border-stone-200">1 / 1</span>
-        <button onclick="changePage(1)" id="btnNext" class="w-9 h-9 bg-white border border-stone-200 rounded-lg flex items-center justify-center text-stone-900 hover:bg-stone-50 disabled:opacity-30 transition-all"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+    <!-- Pagination -->
+    <div id="pagination" class="flex justify-center items-center gap-3 pb-16">
+        <button onclick="changePage(-1)" id="btnPrev" class="w-9 h-9 bg-white border border-emerald-100 rounded-xl flex items-center justify-center text-emerald-700 hover:bg-emerald-50 disabled:opacity-30 transition-all custom-shadow"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+        <span id="pageIndicator" class="text-xs font-bold text-emerald-800 bg-white px-4 py-2 rounded-xl border border-emerald-100 custom-shadow">1 / 1</span>
+        <button onclick="changePage(1)" id="btnNext" class="w-9 h-9 bg-white border border-emerald-100 rounded-xl flex items-center justify-center text-emerald-700 hover:bg-emerald-50 disabled:opacity-30 transition-all custom-shadow"><i class="fa-solid fa-arrow-right text-xs"></i></button>
     </div>
 </main>
 
-<footer class="bg-stone-100 border-t border-stone-200 py-10 text-center">
-    <div class="flex justify-center gap-4 mb-4 text-stone-400">
-        <i class="fa-solid fa-tractor text-xl"></i>
-        <i class="fa-solid fa-cow text-xl"></i>
+<footer class="bg-[#022c22] text-emerald-400 py-10 px-6">
+    <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
+        <div class="flex gap-4 mb-4 text-emerald-600">
+            <i class="fa-solid fa-tractor text-2xl"></i>
+            <i class="fa-solid fa-cow text-2xl"></i>
+            <i class="fa-solid fa-seedling text-2xl"></i>
+        </div>
+        <h3 class="text-white font-bold text-sm">Straw Market Thailand</h3>
+        <p class="text-[10px] mt-2 max-w-md opacity-60">แพลตฟอร์มกลางสำหรับเกษตรกรไทย เชื่อมต่อ Google Sheets</p>
     </div>
-    <p class="text-stone-700 font-bold text-xs sm:text-sm">Straw Market Thailand</p>
-    <p class="text-stone-400 text-[10px] mt-1">ระบบลงประกาศซื้อขายฟางออนไลน์โทนสีดิน</p>
 </footer>
 
 <!-- Image Slider Modal -->
-<div id="imageSlider" class="fixed inset-0 z-[60] bg-black/95 flex flex-col items-center justify-center slider-hidden touch-none">
-    <button onclick="closeImageSlider()" class="absolute top-6 right-6 text-white w-10 h-10 flex items-center justify-center bg-white/10 rounded-full backdrop-blur-md z-50">
+<div id="imageSlider" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center slider-hidden transition-all duration-300 touch-none">
+    <button onclick="closeImageSlider()" class="absolute top-6 right-6 text-white w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-xl z-[110] transition-colors">
         <i class="fa-solid fa-xmark text-xl"></i>
     </button>
     <div class="relative w-full h-full flex items-center justify-center p-4">
-        <button onclick="changeSlide(-1)" class="absolute left-4 text-white p-3 rounded-full z-40 hidden md:block"><i class="fa-solid fa-chevron-left text-2xl"></i></button>
-        <img id="sliderMainImage" src="" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl transition-all duration-300">
-        <button onclick="changeSlide(1)" class="absolute right-4 text-white p-3 rounded-full z-40 hidden md:block"><i class="fa-solid fa-chevron-right text-2xl"></i></button>
+        <button onclick="changeSlide(-1)" class="absolute left-6 text-white w-12 h-12 hidden md:flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full z-[110]"><i class="fa-solid fa-chevron-left text-xl"></i></button>
+        <img id="sliderMainImage" src="" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl transition-all duration-500">
+        <button onclick="changeSlide(1)" class="absolute right-6 text-white w-12 h-12 hidden md:flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full z-[110]"><i class="fa-solid fa-chevron-right text-xl"></i></button>
     </div>
-    <div class="absolute bottom-10 flex gap-6 items-center z-40">
-        <button onclick="changeSlide(-1)" class="text-white p-4 md:hidden bg-white/10 rounded-full"><i class="fa-solid fa-chevron-left"></i></button>
-        <span id="sliderCounter" class="text-white text-xs bg-black/50 px-4 py-1.5 rounded-full font-mono border border-white/10">1 / 1</span>
-        <button onclick="changeSlide(1)" class="text-white p-4 md:hidden bg-white/10 rounded-full"><i class="fa-solid fa-chevron-right"></i></button>
+    <div class="absolute bottom-10 flex flex-col items-center gap-4 z-[110]">
+        <span id="sliderCounter" class="text-white text-[10px] bg-black/40 px-4 py-1.5 rounded-full font-mono border border-white/10 backdrop-blur-md">1 / 1</span>
+        <div class="flex gap-3 md:hidden">
+            <button onclick="changeSlide(-1)" class="w-12 h-12 bg-white/10 rounded-xl text-white flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button>
+            <button onclick="changeSlide(1)" class="w-12 h-12 bg-white/10 rounded-xl text-white flex items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
     </div>
 </div>
 
 <!-- View Detail Dialog -->
-<dialog id="viewDlg" class="bg-white rounded-2xl shadow-2xl p-0 w-[95%] max-w-lg m-auto overflow-hidden">
-    <div class="px-5 py-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
-        <h3 class="font-bold text-stone-900 flex items-center gap-2"><i class="fa-solid fa-circle-info text-[#8d6e63]"></i> รายละเอียด</h3>
-        <button onclick="closeViewModal()" class="text-stone-400 hover:text-stone-600 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+<dialog id="viewDlg" class="bg-white rounded-[2rem] shadow-2xl p-0 w-[95%] max-w-2xl m-auto overflow-hidden">
+    <div class="relative h-60 sm:h-80 bg-emerald-50">
+        <div id="detailImageHero" class="w-full h-full cursor-pointer overflow-hidden">
+            <img id="viewHeroImg" src="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+        </div>
+        
+        <!-- แถบปุ่มด้านขวาบน -->
+        <div class="absolute top-4 right-4 flex gap-2 z-10">
+            <!-- ปุ่มลบประกาศ อยู่ข้างปุ่มปิด -->
+            <button id="btnDeletePost" class="bg-white/80 hover:bg-red-50 backdrop-blur-md text-red-500 w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md" title="ลบประกาศ">
+                <i class="fa-solid fa-trash-can text-sm"></i>
+            </button>
+            <button onclick="closeViewModal()" class="bg-white/80 hover:bg-white backdrop-blur-md text-stone-900 w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <div class="absolute bottom-4 left-4 right-4 flex gap-2 overflow-x-auto pb-2 no-scrollbar" id="viewImages"></div>
     </div>
     
-    <div class="p-5 overflow-y-auto max-h-[70vh] custom-scrollbar">
-        <div id="viewImages" class="flex gap-2 mb-4 overflow-x-auto pb-2 snap-x"></div>
-        
-        <div class="flex justify-between items-start mb-2">
-            <h2 id="viewTitle" class="text-lg font-bold text-stone-900 leading-tight"></h2>
-            <button id="btnDeletePost" class="text-stone-300 hover:text-red-500 transition-colors p-2"><i class="fa-solid fa-trash-can"></i></button>
-        </div>
-        
-        <div class="flex items-center gap-2 mb-4">
-             <span class="bg-stone-100 text-stone-700 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase">ราคา</span>
-             <p id="viewPrice" class="text-[#5d4037] font-bold text-xl"></p>
-        </div>
-        
-        <div class="space-y-3 mb-4">
-            <div class="flex items-center gap-3 bg-stone-50 p-3 rounded-xl border border-stone-100">
-                <div class="w-9 h-9 bg-white rounded-lg flex items-center justify-center text-stone-500 shadow-sm flex-shrink-0"><i class="fa-solid fa-user text-sm"></i></div>
-                <div class="min-w-0">
-                    <p class="text-[9px] text-stone-500 font-bold uppercase">ผู้ประกาศ</p>
-                    <p id="viewContact" class="font-medium text-stone-900 text-sm truncate"></p>
+    <div class="p-6 sm:p-8 overflow-y-auto max-h-[60vh]">
+        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+            <div>
+                <h2 id="viewTitle" class="text-xl sm:text-2xl font-bold text-[#064e3b] leading-tight mb-1"></h2>
+                <div class="flex flex-wrap gap-2 mt-2">
+                    <span class="bg-emerald-50 text-emerald-700 text-[10px] px-2 py-0.5 rounded-lg border border-emerald-100 font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-location-dot"></i> <span id="viewProvince"></span>
+                    </span>
+                    <span id="viewAddressTag" class="bg-stone-50 text-stone-500 text-[10px] px-2 py-0.5 rounded-lg border border-stone-200 font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-map-pin"></i> <span id="viewAddress"></span>
+                    </span>
                 </div>
             </div>
-            <div class="flex items-center gap-3 bg-stone-50 p-3 rounded-xl border border-stone-100">
-                <div class="w-9 h-9 bg-white rounded-lg flex items-center justify-center text-stone-500 shadow-sm flex-shrink-0"><i class="fa-solid fa-location-dot text-sm"></i></div>
+            <div class="flex flex-col items-start md:items-end">
+                <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-widest mb-0.5">ราคาต่อก้อน</span>
+                <p id="viewPrice" class="text-2xl sm:text-3xl font-black text-[#064e3b]"></p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-emerald-50/50 p-3 rounded-2xl border border-emerald-100 flex items-center gap-3">
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#15803d] shadow-sm flex-shrink-0 border border-emerald-100"><i class="fa-solid fa-user text-sm"></i></div>
                 <div class="min-w-0">
-                    <p class="text-[9px] text-stone-500 font-bold uppercase">พิกัดรับสินค้า</p>
-                    <p id="viewLocation" class="font-medium text-stone-900 text-sm truncate"></p>
+                    <p class="text-[9px] text-emerald-400 font-bold uppercase">ผู้ประกาศ</p>
+                    <p id="viewContact" class="font-bold text-[#064e3b] text-sm truncate"></p>
+                </div>
+            </div>
+            <div class="bg-emerald-50/50 p-3 rounded-2xl border border-emerald-100 flex items-center gap-3">
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#15803d] shadow-sm flex-shrink-0 border border-emerald-100"><i class="fa-solid fa-phone text-sm"></i></div>
+                <div class="min-w-0">
+                    <p class="text-[9px] text-emerald-400 font-bold uppercase">เบอร์โทรติดต่อ</p>
+                    <p id="viewPhoneText" class="font-bold text-[#064e3b] text-sm truncate"></p>
                 </div>
             </div>
         </div>
 
-        <div>
-            <h4 class="text-[10px] font-bold text-stone-500 uppercase mb-2 ml-1">ข้อมูลเพิ่มเติม</h4>
-            <div id="viewBody" class="whitespace-pre-line text-sm leading-relaxed text-stone-800 bg-stone-50/50 p-4 rounded-xl border border-stone-100"></div>
+        <div class="mb-6">
+            <h4 class="text-xs font-bold text-[#064e3b] mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-align-left text-emerald-400"></i> รายละเอียดประกาศ
+            </h4>
+            <div id="viewBody" class="whitespace-pre-line text-[#022c22] bg-emerald-50/30 p-4 rounded-2xl border border-emerald-100 leading-relaxed text-xs"></div>
+            <p id="viewPublishDate" class="text-[9px] text-emerald-400 mt-3 italic text-right"></p>
         </div>
-    </div>
-    <div class="p-5 border-t border-stone-100 flex gap-3">
-        <a id="btnCall" href="#" class="flex-1 bg-[#5d4037] text-white py-3 rounded-xl text-center font-bold shadow-md flex items-center justify-center gap-2 btn-animate transition-all"><i class="fa-solid fa-phone"></i> โทรหาผู้ขาย</a>
+
+        <div class="flex gap-3">
+            <a id="btnCall" href="#" class="flex-1 bg-[#064e3b] text-white py-3.5 rounded-xl text-center font-bold shadow-lg flex items-center justify-center gap-2 btn-animate transition-all hover:bg-[#022c22] text-sm">
+                <i class="fa-solid fa-phone-flip"></i> ติดต่อผู้ขาย
+            </a>
+        </div>
     </div>
 </dialog>
 
 <!-- Add/Edit Dialog -->
-<dialog id="dlg" class="bg-white rounded-2xl shadow-2xl p-0 w-[95%] max-w-lg m-auto overflow-hidden">
-    <div class="px-5 py-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
-        <h3 id="dlgTitle" class="font-bold text-stone-900">ลงประกาศขายฟาง</h3>
-        <div class="flex items-center gap-2">
-            <button onclick="fillDemoData()" class="text-[9px] bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full font-bold hover:bg-stone-300 transition-colors uppercase">ตัวอย่าง</button>
-            <button onclick="closeModal()" class="text-stone-300 hover:text-stone-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+<dialog id="dlg" class="bg-white rounded-[2rem] shadow-2xl p-0 w-[95%] max-w-xl m-auto overflow-hidden">
+    <div class="px-6 py-5 border-b border-emerald-100 flex justify-between items-center bg-emerald-50/50">
+        <div>
+            <h3 id="dlgTitle" class="text-lg font-bold text-[#064e3b]">ลงประกาศขายฟาง</h3>
         </div>
+        <button onclick="closeModal()" class="text-emerald-300 hover:text-emerald-500 w-9 h-9 rounded-full flex items-center justify-center bg-white border border-emerald-100 shadow-sm"><i class="fa-solid fa-xmark text-lg"></i></button>
     </div>
     
-    <div class="p-5 overflow-y-auto max-h-[70vh] custom-scrollbar space-y-4">
-        <input type="hidden" id="postId">
-        
-        <div>
-            <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1.5 ml-1">หัวข้อประกาศ <span class="text-red-500">*</span></label>
-            <input id="title" type="text" class="w-full px-4 py-2.5 border border-stone-200 rounded-xl focus:ring-2 focus:ring-[#8d6e63] outline-none text-sm" placeholder="เช่น ฟางก้อนใหม่ อัดแน่น...">
-        </div>
-        
-        <div class="grid grid-cols-2 gap-3">
-             <div>
-                <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1.5 ml-1">จังหวัด <span class="text-red-500">*</span></label>
-                <select id="input_province" class="w-full px-4 py-2.5 border border-stone-200 rounded-xl bg-white focus:ring-2 focus:ring-[#8d6e63] outline-none text-sm">
-                    <option value="">เลือกจังหวัด</option>
-                </select>
-            </div>
+    <div class="p-6 overflow-y-auto max-h-[70vh] space-y-5" id="formContainer">
+        <div class="space-y-3">
             <div>
-                <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1.5 ml-1">ราคา (บาท) <span class="text-red-500">*</span></label>
-                <input id="price" type="number" class="w-full px-4 py-2.5 border border-stone-200 rounded-xl outline-none text-sm" placeholder="0">
+                <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">ชื่อรายการสินค้า <span class="text-red-500">*</span></label>
+                <input id="title" type="text" class="w-full px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium text-[#064e3b]" placeholder="เช่น ฟางข้าวหอมมะลิอัดก้อน...">
             </div>
-        </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                 <div>
+                    <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">จังหวัด <span class="text-red-500">*</span></label>
+                    <select id="input_province" class="w-full px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium appearance-none cursor-pointer text-[#064e3b]">
+                        <option value="">เลือกจังหวัด</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">ราคาต่อก้อน <span class="text-red-500">*</span></label>
+                    <input id="price" type="number" class="w-full px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium pr-14 text-[#064e3b]" placeholder="0">
+                    <span class="absolute right-4 bottom-3.5 text-[9px] font-bold text-emerald-400">บ./ก้อน</span>
+                </div>
+            </div>
 
-        <div class="grid grid-cols-2 gap-3">
-            <div>
-                <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1.5 ml-1">ผู้ติดต่อ</label>
-                <input id="contact_name" type="text" class="w-full px-4 py-2.5 border border-stone-200 rounded-xl outline-none text-sm">
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">ชื่อผู้ติดต่อ</label>
+                    <input id="contact_name" type="text" class="w-full px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium text-[#064e3b]" placeholder="ชื่อผู้ติดต่อ">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
+                    <input id="phone" type="tel" class="w-full px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium text-[#064e3b]" placeholder="เบอร์โทรศัพท์ติดต่อ">
+                </div>
             </div>
-            <div>
-                <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1.5 ml-1">อำเภอ/ตำบล</label>
-                <input id="address" type="text" class="w-full px-4 py-2.5 border border-stone-200 rounded-xl outline-none text-sm" placeholder="ระบุพิกัด">
-            </div>
-        </div>
 
-        <div>
-            <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1.5 ml-1">รายละเอียดและเบอร์โทร</label>
-            <textarea id="body" rows="4" class="w-full px-4 py-2.5 border border-stone-200 rounded-xl outline-none text-sm resize-none" placeholder="ระบุเบอร์โทรและข้อมูลอื่นๆ..."></textarea>
+            <div class="space-y-3">
+                <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">พิกัดและรายละเอียด</label>
+                <input id="address" type="text" class="w-full px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium text-[#064e3b]" placeholder="อำเภอ / ตำบล (พิกัดรับสินค้า)">
+                <textarea id="body" rows="3" class="w-full px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium resize-none text-[#064e3b]" placeholder="รายละเอียดประกาศอื่นๆ..."></textarea>
+            </div>
         </div>
         
         <div>
-            <div class="flex justify-between items-center mb-2">
-                <label class="block text-[10px] font-bold text-stone-500 uppercase ml-1">รูปถ่ายสินค้า</label>
-                <span id="imgCount" class="text-[9px] bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-bold">0 / 3</span>
+            <div class="flex justify-between items-center mb-3">
+                <label class="block text-[10px] font-bold text-emerald-400 uppercase ml-1 tracking-widest">รูปภาพสินค้า</label>
+                <span id="imgCount" class="text-[9px] bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full font-bold">0 / 3</span>
             </div>
             <div class="grid grid-cols-3 gap-2">
                 <div id="previewList" class="contents"></div>
-                <label id="uploadBtn" class="aspect-square border-2 border-dashed border-stone-200 rounded-xl cursor-pointer bg-stone-50 hover:bg-stone-100 flex flex-col items-center justify-center text-stone-300 transition-all group">
+                <label id="uploadBtn" class="aspect-square border-2 border-dashed border-emerald-200 rounded-xl cursor-pointer bg-emerald-50 hover:bg-emerald-100 hover:border-[#10b981] flex flex-col items-center justify-center text-emerald-400 transition-all group">
                     <i class="fa-solid fa-camera text-xl group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[8px] mt-1 font-bold">เพิ่มรูป</span>
+                    <span class="text-[8px] mt-1.5 font-bold uppercase">เพิ่มรูป</span>
                     <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
                 </label>
             </div>
         </div>
     </div>
     
-    <div class="p-5 border-t border-stone-100 flex gap-3">
-        <button onclick="closeModal()" class="flex-1 px-4 py-3 border border-stone-200 rounded-xl text-stone-600 font-bold text-sm">ยกเลิก</button>
-        <button onclick="savePost()" id="btnSave" class="flex-[2] bg-[#5d4037] text-white py-3 rounded-xl font-bold shadow-md flex items-center justify-center gap-2 btn-animate transition-all text-sm">
+    <div class="p-6 border-t border-emerald-100 flex gap-3">
+        <button onclick="closeModal()" class="flex-1 px-4 py-3.5 border border-emerald-200 rounded-xl text-emerald-500 font-bold text-sm">ยกเลิก</button>
+        <button onclick="savePost()" id="btnSave" class="flex-[2] bg-[#064e3b] text-white py-3.5 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 btn-animate transition-all hover:bg-[#022c22] text-sm">
             <span id="btnSaveText">ลงประกาศ</span> 
             <i id="btnSaveIcon" class="fa-solid fa-check-circle"></i>
         </button>
@@ -263,15 +346,14 @@
 </dialog>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbw1Kyy4kR9-PemWXcwXNH06R4I4V7MTud1LA_eLr_qdlNgCZDzdWYTRHnFQqIi2YUJM/exec"; // ใส่ Web App URL ของคุณที่นี่
+const API_URL = "https://script.google.com/macros/s/AKfycbySGZ60_4wuj9mYaZe3-BJJRtDF0weo3zTE7iAJCIIqJNiTxa5iMRPqHP84LicxbXaH/exec"; 
 
 const PROVINCES = ["กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง", "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์", "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี"].sort();
 
-// State
 let posts = [];
 let filteredPosts = [];
 let currentPage = 1;
-const ITEMS_PER_PAGE = 12; // ปรับเป็น 12 เพื่อให้หาร 3 ลงตัวบนมือถือ
+const ITEMS_PER_PAGE = 12; 
 let formImages = [];
 let sliderImages = [];
 let sliderIndex = 0;
@@ -279,16 +361,17 @@ let sliderIndex = 0;
 const dom = {
     loading: document.getElementById('loading'),
     board: document.getElementById('board'),
-    pagination: document.getElementById('pagination'),
     pageIndicator: document.getElementById('pageIndicator'),
     btnPrev: document.getElementById('btnPrev'),
     btnNext: document.getElementById('btnNext'),
     dlg: document.getElementById('dlg'),
     viewDlg: document.getElementById('viewDlg'),
+    btnSaveText: document.getElementById('btnSaveText'),
     title: document.getElementById('title'),
     price: document.getElementById('price'),
     province: document.getElementById('input_province'),
     contactName: document.getElementById('contact_name'),
+    phone: document.getElementById('phone'),
     address: document.getElementById('address'),
     body: document.getElementById('body'),
     imgPreview: document.getElementById('previewList'),
@@ -300,24 +383,41 @@ const dom = {
     qMobile: document.getElementById('q_mobile'),
     slider: document.getElementById('imageSlider'),
     sliderImg: document.getElementById('sliderMainImage'),
-    sliderCount: document.getElementById('sliderCounter')
+    sliderCount: document.getElementById('sliderCounter'),
+    viewHero: document.getElementById('viewHeroImg'),
+    viewDate: document.getElementById('viewPublishDate')
 };
+
+function setScrollLock(lock) {
+    if (lock) document.body.classList.add('no-scroll');
+    else document.body.classList.remove('no-scroll');
+}
 
 function init() {
     populateProvinces();
     loadPosts();
-    
     [dom.qDesktop, dom.qMobile].forEach(el => el.addEventListener('input', debounce(applyFilters, 400)));
     [dom.filterDesktop, dom.filterMobile].forEach(el => el.addEventListener('change', (e) => {
         dom.filterDesktop.value = e.target.value;
         dom.filterMobile.value = e.target.value;
         applyFilters();
     }));
+
+    const requiredFields = ['title', 'price', 'input_province', 'phone'];
+    requiredFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => el.classList.remove('field-error'));
+            if (el.tagName === 'SELECT') {
+                el.addEventListener('change', () => el.classList.remove('field-error'));
+            }
+        }
+    });
 }
 
 function populateProvinces() {
     const html = PROVINCES.map(p => `<option value="${p}">${p}</option>`).join('');
-    dom.province.innerHTML = `<option value="">เลือกจังหวัด</option>${html}`;
+    dom.province.innerHTML = `<option value="">จังหวัด</option>${html}`;
     dom.filterDesktop.innerHTML = `<option value="all">ทุกจังหวัด</option>${html}`;
     dom.filterMobile.innerHTML = `<option value="all">ทุกที่</option>${html}`;
 }
@@ -325,17 +425,15 @@ function populateProvinces() {
 async function loadPosts() {
     dom.loading.classList.remove('hidden');
     dom.board.innerHTML = '';
-    
     try {
-        if (!API_URL) throw new Error("URL Not Found");
         const res = await fetch(API_URL);
         const data = await res.json();
         posts = (Array.isArray(data) ? data : data.data || []).reverse();
     } catch (e) {
+        console.error("Load failed:", e);
         posts = [
-            { id: 1, title: "ฟางหอมมะลิ อัดก้อนหนา", price: 35, province: "สุรินทร์", address: "อ.เมือง", contact_name: "พี่สมใจ", body: "ฟางปีนี้ อัดก้อนแน่นๆ\nโทร 081-111-2222", images: ["https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=600&q=80"] },
-            { id: 2, title: "ฟางก้อนใหญ่ เก็บดี", price: 40, province: "นครราชสีมา", address: "ปากช่อง", contact_name: "ลุงชัย", body: "ไม่โดนฝน วัวกินดี\nโทร 089-888-7766", images: ["https://images.unsplash.com/photo-1473216896590-c081e649dc49?auto=format&fit=crop&w=600&q=80"] },
-            { id: 3, title: "ขายเหมาฟางข้าว", price: 30, province: "ขอนแก่น", address: "อ.พล", contact_name: "น้อย", body: "เหมา 200 ก้อนขึ้นไปลดได้\nโทร 087-000-1111", images: [] }
+            { id: 1705000000000, title: "ฟางหอมมะลิ อัดก้อนหนา", price: 35, province: "สุรินทร์", address: "อ.เมือง", contact_name: "พี่สมใจ", phone: "0811112222", body: "ฟางปีนี้ อัดก้อนแน่นๆ ไม่โดนฝน เก็บอย่างดีในที่ร่ม", images: ["https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=800&q=80"] },
+            { id: 1705000000001, title: "ฟางก้อนใหญ่ เก็บโรงเรือน", price: 40, province: "นครราชสีมา", address: "ปากช่อง", contact_name: "ลุงชัย", phone: "0898887766", body: "ฟางแห้งสนิท ก้อนแน่น วัวกินดีมาก", images: ["https://images.unsplash.com/photo-1473216896590-c081e649dc49?auto=format&fit=crop&w=800&q=80"] }
         ];
     } finally {
         dom.loading.classList.add('hidden');
@@ -346,13 +444,11 @@ async function loadPosts() {
 function applyFilters() {
     const q = (dom.qDesktop.value || dom.qMobile.value).toLowerCase();
     const prov = dom.filterDesktop.value;
-    
     filteredPosts = posts.filter(p => {
-        const textMatch = (p.title + p.body + (p.address||'') + p.province).toLowerCase().includes(q);
+        const textMatch = (p.title + (p.body||'') + (p.address||'') + p.province + (p.phone||'')).toLowerCase().includes(q);
         const provMatch = prov === 'all' || p.province === prov;
         return textMatch && provMatch;
     });
-    
     currentPage = 1;
     renderBoard();
 }
@@ -363,32 +459,33 @@ function renderBoard() {
     const items = filteredPosts.slice(start, start + ITEMS_PER_PAGE);
     
     if (items.length === 0) {
-        dom.board.innerHTML = `<div class="col-span-full py-16 text-center text-stone-400 text-xs">ไม่พบประกาศ</div>`;
-        return;
-    }
-
-    items.forEach(p => {
-        const thumb = (p.images && p.images[0]) || 'https://placehold.co/200x200?text=No+Photo';
-        const card = document.createElement('div');
-        card.className = "bg-white rounded-xl overflow-hidden shadow-sm border border-stone-100 flex flex-col cursor-pointer active:scale-95 transition-all";
-        card.onclick = () => viewDetail(p.id);
-        
-        card.innerHTML = `
-            <div class="aspect-square bg-stone-200 overflow-hidden relative">
-                <img src="${thumb}" class="w-full h-full object-cover">
-                <div class="absolute bottom-0 inset-x-0 bg-black/40 text-white text-[7px] sm:text-[9px] px-1 py-0.5 truncate text-center">${p.province}</div>
-            </div>
-            <div class="p-1.5 sm:p-3 flex flex-col flex-grow bg-white">
-                <h3 class="font-bold text-stone-900 card-text-size line-clamp-1 sm:line-clamp-2 leading-tight h-4 sm:h-9">${p.title}</h3>
-                <div class="mt-1 flex justify-between items-baseline">
-                    <span class="text-[#5d4037] font-bold text-[9px] sm:text-base">฿${p.price.toLocaleString()}</span>
-                    <span class="hidden sm:inline-block text-[8px] text-stone-400">${p.address || ''}</span>
+        dom.board.innerHTML = `<div class="col-span-full py-16 text-center text-emerald-300 flex flex-col items-center gap-2">
+            <p class="text-[10px] font-bold uppercase tracking-widest">ไม่พบรายการ</p>
+        </div>`;
+    } else {
+        items.forEach(p => {
+            const thumb = (p.images && p.images[0]) || 'https://placehold.co/400x400/ecfdf5/064e3b?text=Straw';
+            const card = document.createElement('div');
+            card.className = "bg-white rounded-2xl overflow-hidden shadow-sm border border-emerald-50 flex flex-col cursor-pointer active:scale-95 transition-all duration-300";
+            card.onclick = () => viewDetail(p.id);
+            card.innerHTML = `
+                <div class="aspect-[1/1] bg-emerald-50 overflow-hidden relative">
+                    <img src="${thumb}" class="w-full h-full object-cover">
+                    <div class="absolute bottom-1 right-1 bg-white/90 backdrop-blur-md px-1.5 py-0.5 rounded-lg text-[8px] font-bold shadow-sm text-[#064e3b]">
+                        ${p.province}
+                    </div>
                 </div>
-            </div>
-        `;
-        dom.board.appendChild(card);
-    });
-    
+                <div class="p-2 flex flex-col flex-grow bg-white">
+                    <h3 class="font-bold text-[#064e3b] text-[10px] sm:text-xs line-clamp-2 leading-tight mb-1 h-6 sm:h-8">${p.title}</h3>
+                    <div class="mt-auto flex items-baseline gap-0.5">
+                        <span class="text-[#059669] font-black text-xs sm:text-base">฿${p.price.toLocaleString()}</span>
+                        <span class="text-[7px] text-emerald-400 font-bold uppercase">/ก้อน</span>
+                    </div>
+                </div>
+            `;
+            dom.board.appendChild(card);
+        });
+    }
     updatePagination();
 }
 
@@ -405,81 +502,93 @@ function changePage(delta) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function openNewPostModal() {
-    resetForm();
-    dom.dlg.showModal();
-}
-
-function closeModal() {
-    dom.dlg.close();
-}
+function openNewPostModal() { resetForm(); dom.dlg.showModal(); setScrollLock(true); }
+function closeModal() { dom.dlg.close(); setScrollLock(false); }
 
 function viewDetail(id) {
     const p = posts.find(x => x.id === id);
     if (!p) return;
     
+    dom.viewHero.src = (p.images && p.images[0]) || 'https://placehold.co/800x600/ecfdf5/064e3b?text=Straw+Market';
     document.getElementById('viewTitle').textContent = p.title;
     document.getElementById('viewPrice').textContent = `฿${p.price.toLocaleString()}`;
-    document.getElementById('viewContact').textContent = p.contact_name || 'ไม่ระบุ';
-    document.getElementById('viewLocation').textContent = `${p.address || ''} ${p.province}`;
-    document.getElementById('viewBody').textContent = p.body || '-';
+    document.getElementById('viewContact').textContent = p.contact_name || 'ไม่ระบุชื่อ';
+    document.getElementById('viewPhoneText').textContent = p.phone || 'ไม่ระบุเบอร์โทร';
+    document.getElementById('viewProvince').textContent = p.province;
     
-    const phoneMatch = p.body.match(/0\d{8,9}/);
-    const callBtn = document.getElementById('btnCall');
-    if (phoneMatch) {
-        callBtn.href = `tel:${phoneMatch[0]}`;
-        callBtn.style.opacity = "1";
-        callBtn.style.pointerEvents = "auto";
+    const addrTag = document.getElementById('viewAddressTag');
+    if (p.address) {
+        document.getElementById('viewAddress').textContent = p.address;
+        addrTag.style.display = 'flex';
     } else {
-        callBtn.href = "#";
-        callBtn.style.opacity = "0.5";
-        callBtn.style.pointerEvents = "none";
+        addrTag.style.display = 'none';
     }
+
+    document.getElementById('viewBody').textContent = p.body || 'ไม่มีรายละเอียดเพิ่มเติม';
+    dom.viewDate.textContent = "ลงประกาศเมื่อ: " + new Date(p.id).toLocaleDateString('th-TH', { year:'numeric', month:'short', day:'numeric', hour: '2-digit', minute: '2-digit' });
+    
+    const phoneToCall = p.phone || (p.body ? p.body.match(/0\d{8,9}/)?.[0] : null);
+    const callBtn = document.getElementById('btnCall');
+    callBtn.href = phoneToCall ? `tel:${phoneToCall}` : "#";
+    callBtn.style.opacity = phoneToCall ? "1" : "0.5";
+    callBtn.innerHTML = phoneToCall ? `<i class="fa-solid fa-phone-flip"></i> ติดต่อ ${phoneToCall}` : `<i class="fa-solid fa-phone-slash"></i> ไม่มีเบอร์ติดต่อ`;
 
     const imgBox = document.getElementById('viewImages');
     imgBox.innerHTML = '';
-    if (p.images && p.images.length > 0) {
-        sliderImages = p.images;
-        p.images.forEach((url, i) => {
+    sliderImages = p.images && p.images.length > 0 ? p.images : [];
+    
+    if (sliderImages.length > 0) {
+        sliderImages.forEach((url, i) => {
             const img = document.createElement('img');
             img.src = url;
-            img.className = "h-28 w-auto rounded-xl object-cover cursor-pointer hover:opacity-80 transition-all snap-start";
-            img.onclick = () => openSlider(i);
+            img.className = `h-10 w-14 rounded-lg object-cover border-2 transition-all cursor-pointer flex-shrink-0 ${i===0?'border-[#10b981]':'border-transparent bg-white/20'}`;
+            img.onclick = (e) => { e.stopPropagation(); openSlider(i); };
             imgBox.appendChild(img);
         });
+        document.getElementById('detailImageHero').onclick = () => openSlider(0);
     } else {
-        imgBox.innerHTML = '<div class="h-28 w-full bg-stone-50 rounded-xl flex items-center justify-center text-stone-300 text-xs">ไม่มีรูป</div>';
+        document.getElementById('detailImageHero').onclick = null;
     }
 
-    document.getElementById('btnDeletePost').onclick = () => confirmDelete(p.id);
+    document.getElementById('btnDeletePost').onclick = (e) => {
+        e.stopPropagation();
+        confirmDelete(p.id);
+    };
+    
     dom.viewDlg.showModal();
+    setScrollLock(true);
 }
 
-function closeViewModal() {
-    dom.viewDlg.close();
-}
+function closeViewModal() { dom.viewDlg.close(); setScrollLock(false); }
 
 async function confirmDelete(id) {
-    // ปิด Dialog แรกทันทีที่กดปุ่มลบ ตามคำขอ
-    closeViewModal();
-
     const res = await Swal.fire({
-        title: 'ยืนยันการลบ?',
-        text: "ประกาศนี้จะถูกลบถาวร",
+        title: 'ยืนยันการลบประกาศ?',
+        text: 'ข้อมูลประกาศนี้จะถูกลบออกจาก Google Sheets อย่างถาวร',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#d32f2f',
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#064e3b',
         confirmButtonText: 'ลบทิ้ง',
         cancelButtonText: 'ยกเลิก'
     });
-
+    
     if (res.isConfirmed) {
-        if (API_URL) {
-            await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', id: id }) });
+        Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        
+        try {
+            await fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ action: 'delete', id: id })
+            });
+            posts = posts.filter(p => p.id !== id);
+            applyFilters();
+            closeViewModal();
+            Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1500, showConfirmButton: false });
+        } catch (err) {
+            Swal.fire('Error', 'ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง', 'error');
         }
-        posts = posts.filter(p => p.id !== id);
-        applyFilters();
-        Swal.fire('ลบแล้ว', 'ลบข้อมูลเรียบร้อย', 'success');
     }
 }
 
@@ -500,64 +609,89 @@ function renderPreview() {
     dom.imgPreview.innerHTML = '';
     formImages.forEach((src, i) => {
         const div = document.createElement('div');
-        div.className = "relative aspect-square rounded-xl overflow-hidden group border border-stone-100";
+        div.className = "relative aspect-square rounded-xl overflow-hidden border border-emerald-100 shadow-sm";
         div.innerHTML = `<img src="${src}" class="w-full h-full object-cover">
-            <button onclick="removeImg(${i})" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-[8px] flex items-center justify-center"><i class="fa-solid fa-x"></i></button>`;
+            <button onclick="removeImg(${i})" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-md text-[8px] flex items-center justify-center shadow-md"><i class="fa-solid fa-xmark"></i></button>`;
         dom.imgPreview.appendChild(div);
     });
     dom.imgCount.textContent = `${formImages.length} / 3`;
     dom.uploadBtn.classList.toggle('hidden', formImages.length >= 3);
 }
 
-function removeImg(i) {
-    formImages.splice(i, 1);
-    renderPreview();
-}
+function removeImg(i) { formImages.splice(i, 1); renderPreview(); }
 
 async function savePost() {
-    if (!dom.title.value || !dom.price.value || !dom.province.value) {
-        Swal.fire({ icon: 'warning', title: 'ไม่ครบ', text: 'กรุณากรอกหัวข้อ ราคา และจังหวัด' });
+    const validations = [
+        { el: dom.title, name: 'ชื่อรายการสินค้า' },
+        { el: dom.province, name: 'จังหวัด' },
+        { el: dom.price, name: 'ราคาต่อก้อน' },
+        { el: dom.phone, name: 'เบอร์โทรศัพท์' }
+    ];
+    validations.forEach(v => v.el.classList.remove('field-error'));
+    const missing = validations.filter(v => !v.el || !v.el.value.trim());
+
+    if (missing.length > 0) {
+        missing.forEach((m, idx) => {
+            if (m.el) {
+                m.el.classList.add('field-error');
+                if (idx === 0) m.el.focus();
+            }
+        });
         return;
     }
+
     const btn = document.getElementById('btnSave');
+    if (!btn || !dom.btnSaveText) return;
+
     btn.disabled = true;
-    document.getElementById('btnSaveText').textContent = "กำลังส่ง...";
-    
+    const originalText = dom.btnSaveText.textContent;
+    dom.btnSaveText.textContent = "กำลังบันทึกลงชีต...";
+
     const payload = {
         action: 'add',
+        id: Date.now(),
         title: dom.title.value,
         price: Number(dom.price.value),
         province: dom.province.value,
         address: dom.address.value,
         contact_name: dom.contactName.value,
+        phone: dom.phone.value,
         body: dom.body.value,
         images: formImages
     };
 
     try {
-        if (API_URL) await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
-        posts.unshift({ ...payload, id: Date.now() });
+        await fetch(API_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify(payload)
+        });
+
+        posts.unshift(payload);
         applyFilters();
         closeModal();
-        Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500 });
-    } catch (e) {
-        Swal.fire('Error', 'ไม่สามารถบันทึกได้', 'error');
+        Swal.fire({ icon: 'success', title: 'ลงประกาศสำเร็จ', timer: 1500, showConfirmButton: false });
+    } catch (err) {
+        Swal.fire('Error', 'การบันทึกล้มเหลว', 'error');
     } finally {
         btn.disabled = false;
-        document.getElementById('btnSaveText').textContent = "ลงประกาศ";
+        dom.btnSaveText.textContent = originalText;
     }
 }
 
 function openSlider(i) {
     sliderIndex = i;
     updateSlider();
+    if (dom.viewDlg.open) dom.viewDlg.close(); 
     dom.slider.classList.remove('slider-hidden');
     dom.slider.classList.add('slider-visible');
+    setScrollLock(true);
 }
 
 function closeImageSlider() {
     dom.slider.classList.add('slider-hidden');
     dom.slider.classList.remove('slider-visible');
+    setScrollLock(false);
 }
 
 function changeSlide(n) {
@@ -580,18 +714,11 @@ function debounce(fn, t) {
 
 function resetForm() {
     dom.title.value = ''; dom.price.value = ''; dom.province.value = '';
-    dom.contactName.value = ''; dom.address.value = ''; dom.body.value = '';
-    formImages = []; renderPreview();
-}
-
-function fillDemoData() {
-    dom.title.value = "ฟางก้อนคัดเกรด ไร้ฝุ่น (Demo)";
-    dom.price.value = "45";
-    dom.province.value = "นครสวรรค์";
-    dom.contactName.value = "ช่างเด่น";
-    dom.address.value = "อ.เมือง";
-    dom.body.value = "ฟางใหม่สีสวย อัดแน่นๆ ไม่ชื้น\nโทร 088-777-6655";
-    formImages = ["https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=600&q=80"];
+    dom.contactName.value = ''; dom.phone.value = ''; dom.address.value = ''; dom.body.value = '';
+    formImages = []; 
+    [dom.title, dom.price, dom.province, dom.phone].forEach(el => {
+        if (el) el.classList.remove('field-error');
+    });
     renderPreview();
 }
 
