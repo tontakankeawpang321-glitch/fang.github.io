@@ -13,16 +13,19 @@
 
 <style>
     :root {
-        --primary: #064e3b; 
-        --secondary: #15803d; 
-        --accent: #10b981; 
-        --bg-light: #f0fdf4; 
-        --text-main: #022c22;
+        /* ปรับโทนเข้มขัน สบายตา (Dark Straw Theme) */
+        --primary: #fbbf24; /* Amber 400 - สีเหลืองทองนวล */
+        --secondary: #d97706; /* Amber 600 - สีน้ำตาลทอง */
+        --accent: #f59e0b; /* Amber 500 */
+        --bg-dark: #1c1917; /* Stone 900 - พื้นหลังมืดสนิท */
+        --bg-card: #292524; /* Stone 800 - สีการ์ด */
+        --text-main: #fef3c7; /* Amber 100 - ตัวอักษรสีครีมนวล */
+        --text-muted: #a8a29e; /* Stone 400 */
     }
 
     body { 
         font-family: 'Prompt', sans-serif; 
-        background-color: var(--bg-light); 
+        background-color: var(--bg-dark); 
         color: var(--text-main); 
         -webkit-tap-highlight-color: transparent; 
     }
@@ -32,7 +35,7 @@
     }
     
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #d1fae5; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
     ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
     
     dialog {
@@ -41,14 +44,16 @@
         transform: scale(0.95) translateY(10px);
         border: none;
         outline: none;
+        background-color: var(--bg-card);
+        color: var(--text-main);
     }
     dialog[open] { 
         opacity: 1; 
         transform: scale(1) translateY(0); 
     }
     dialog::backdrop { 
-        background: rgba(2, 44, 34, 0.7); 
-        backdrop-filter: blur(8px); 
+        background: rgba(0, 0, 0, 0.85); 
+        backdrop-filter: blur(10px); 
     }
     
     .transition-all-300 { transition: all 0.3s ease; }
@@ -59,25 +64,28 @@
     .btn-animate:active { transform: scale(0.96); }
     
     .glass-nav {
-        background: rgba(255, 255, 255, 0.85);
+        background: rgba(28, 25, 23, 0.8);
         backdrop-filter: blur(12px);
     }
 
     .custom-shadow {
-        box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.1), 0 8px 10px -6px rgba(6, 78, 59, 0.1);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
     }
 
     input, select, textarea {
+        background-color: #44403c !important;
+        color: var(--text-main) !important;
+        border-color: #57534e !important;
         transition: all 0.2s ease;
     }
     input:focus, select:focus, textarea:focus {
-        border-color: var(--secondary) !important;
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        border-color: var(--accent) !important;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
     }
 
     .field-error {
         border-color: #ef4444 !important;
-        background-color: #fef2f2 !important;
+        background-color: #450a0a !important;
     }
 
     .line-clamp-2 {
@@ -92,7 +100,7 @@
     }
 
     .img-fallback {
-        background-image: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+        background-color: #44403c;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -102,35 +110,37 @@
 <body class="min-h-screen flex flex-col">
 
 <!-- Header Section -->
-<nav class="glass-nav border-b border-emerald-100 sticky top-0 z-50">
+<nav class="glass-nav border-b border-stone-800 sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
       <div class="flex items-center gap-3 cursor-pointer group" onclick="refreshApp()">
-        <div class="bg-gradient-to-tr from-[#064e3b] to-[#10b981] text-white p-2.5 rounded-2xl shadow-lg group-hover:rotate-6 transition-all-300">
+        <div class="bg-gradient-to-tr from-[#d97706] to-[#fcd34d] text-stone-900 p-2.5 rounded-2xl shadow-lg group-hover:rotate-6 transition-all-300">
             <i class="fa-solid fa-wheat-awn text-xl"></i>
         </div>
         <div class="hidden xs:block">
-            <span class="font-bold text-lg sm:text-xl text-[#064e3b] tracking-tight block leading-none">Straw<span class="text-[#10b981]">Market</span></span>
-            <span class="text-[9px] sm:text-[10px] text-[#059669] font-bold uppercase tracking-[0.2em]">Agri-Marketplace</span>
+            <span class="font-bold text-lg sm:text-xl text-[#fbbf24] tracking-tight block leading-none">Straw<span class="text-white">Market</span></span>
+            <span class="text-[9px] sm:text-[10px] text-stone-400 font-bold uppercase tracking-[0.2em]">Dark Edition</span>
         </div>
       </div>
       
+      <!-- Desktop Actions -->
       <div class="hidden lg:flex items-center gap-4">
-         <div class="flex bg-emerald-50 p-1 rounded-2xl border border-emerald-100">
-             <select id="filter_province_desktop" class="bg-transparent px-4 py-2 text-sm outline-none cursor-pointer border-r border-emerald-100 text-[#064e3b] font-medium">
+         <div class="flex bg-stone-800 p-1 rounded-2xl border border-stone-700">
+             <select id="filter_province_desktop" class="bg-transparent px-4 py-2 text-sm outline-none cursor-pointer border-r border-stone-700 text-[#fbbf24] font-medium">
                 <option value="all">ทุกจังหวัด</option>
              </select>
              <div class="relative">
-                 <input id="q_desktop" type="text" placeholder="ค้นหาฟางก้อน..." class="bg-transparent pl-10 pr-4 py-2 text-sm w-56 outline-none text-[#064e3b]">
-                 <i class="fa-solid fa-search absolute left-4 top-2.5 text-emerald-400"></i>
+                 <input id="q_desktop" type="text" placeholder="ค้นหาฟางก้อน..." class="bg-transparent pl-10 pr-4 py-2 text-sm w-56 outline-none text-white">
+                 <i class="fa-solid fa-search absolute left-4 top-2.5 text-stone-500"></i>
              </div>
          </div>
-         <button onclick="openNewPostModal()" class="bg-[#064e3b] hover:bg-[#022c22] text-white px-6 py-2.5 rounded-xl shadow-xl flex items-center gap-2 btn-animate font-bold transition-all-300 text-sm">
+         <button onclick="openNewPostModal()" class="bg-[#d97706] hover:bg-[#b45309] text-stone-900 px-6 py-2.5 rounded-xl shadow-xl flex items-center gap-2 btn-animate font-bold transition-all-300 text-sm">
             <i class="fa-solid fa-plus-circle"></i> ลงประกาศ
          </button>
       </div>
       
+      <!-- Mobile Actions -->
       <div class="lg:hidden flex items-center gap-2">
-         <button onclick="openNewPostModal()" class="bg-[#064e3b] text-white w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+         <button onclick="openNewPostModal()" class="bg-[#d97706] text-stone-900 w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
             <i class="fa-solid fa-plus text-lg"></i>
          </button>
       </div>
@@ -138,27 +148,27 @@
 </nav>
 
 <!-- Mobile Search Bar -->
-<div class="lg:hidden bg-white/80 backdrop-blur-md border-b border-emerald-50 p-2 sticky top-16 z-40">
+<div class="lg:hidden bg-stone-900/90 backdrop-blur-md border-b border-stone-800 p-2 sticky top-16 z-40">
     <div class="flex gap-1.5 max-w-2xl mx-auto">
-        <select id="filter_province_mobile" class="border border-emerald-100 rounded-xl px-2 py-1.5 text-[10px] bg-emerald-50 outline-none w-[35%] font-medium text-[#064e3b]">
+        <select id="filter_province_mobile" class="border border-stone-700 rounded-xl px-2 py-1.5 text-[10px] bg-stone-800 outline-none w-[35%] font-medium text-[#fbbf24]">
             <option value="all">ทุกที่</option>
         </select>
         <div class="relative w-[65%]">
-            <input id="q_mobile" type="text" placeholder="ค้นหาประกาศ..." class="w-full pl-8 pr-2 py-1.5 bg-emerald-50 border border-emerald-100 rounded-xl text-[10px] outline-none text-[#064e3b]">
-            <i class="fa-solid fa-search absolute left-3 top-2 text-emerald-400"></i>
+            <input id="q_mobile" type="text" placeholder="ค้นหาประกาศ..." class="w-full pl-8 pr-2 py-1.5 bg-stone-800 border border-stone-700 rounded-xl text-[10px] outline-none text-white">
+            <i class="fa-solid fa-search absolute left-3 top-2 text-stone-500"></i>
         </div>
     </div>
 </div>
 
 <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
     <div class="mb-6 text-center sm:text-left">
-        <div class="inline-block bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider mb-2">Community Hub</div>
-        <h1 class="text-2xl sm:text-4xl font-extrabold text-[#064e3b] tracking-tight">ตลาดฟางข้าวอัดก้อน</h1>
-        <p class="text-[#059669] text-xs sm:text-lg mt-1 font-medium opacity-80">แหล่งรวมประกาศซื้อ-ขาย ฟางคุณภาพดีเพื่อเกษตรกรไทย</p>
+        <div class="inline-block bg-amber-900/30 text-amber-400 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider mb-2 border border-amber-800/50">🌾 Straw Marketplace</div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">ตลาดฟางข้าวอัดก้อน</h1>
+        <p class="text-stone-400 text-xs sm:text-lg mt-1 font-medium">แหล่งรวมประกาศซื้อ-ขายฟาง โทนเข้มสบายตาเพื่อคุณ</p>
     </div>
     
     <div id="loading" class="flex flex-col items-center justify-center py-20 hidden">
-        <div class="w-10 h-10 border-4 border-emerald-100 border-t-[#064e3b] rounded-full animate-spin mb-4"></div>
+        <div class="w-10 h-10 border-4 border-stone-800 border-t-amber-500 rounded-full animate-spin mb-4"></div>
         <p class="text-stone-500 font-medium text-sm">กำลังเตรียมข้อมูลจาก Google Sheets...</p>
     </div>
     
@@ -166,21 +176,21 @@
 
     <!-- Pagination -->
     <div id="pagination" class="flex justify-center items-center gap-3 pb-16">
-        <button onclick="changePage(-1)" id="btnPrev" class="w-9 h-9 bg-white border border-emerald-100 rounded-xl flex items-center justify-center text-emerald-700 hover:bg-emerald-50 disabled:opacity-30 transition-all custom-shadow"><i class="fa-solid fa-arrow-left text-xs"></i></button>
-        <span id="pageIndicator" class="text-xs font-bold text-emerald-800 bg-white px-4 py-2 rounded-xl border border-emerald-100 custom-shadow">1 / 1</span>
-        <button onclick="changePage(1)" id="btnNext" class="w-9 h-9 bg-white border border-emerald-100 rounded-xl flex items-center justify-center text-emerald-700 hover:bg-emerald-50 disabled:opacity-30 transition-all custom-shadow"><i class="fa-solid fa-arrow-right text-xs"></i></button>
+        <button onclick="changePage(-1)" id="btnPrev" class="w-9 h-9 bg-stone-800 border border-stone-700 rounded-xl flex items-center justify-center text-amber-500 hover:bg-stone-700 disabled:opacity-30 transition-all shadow-lg"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+        <span id="pageIndicator" class="text-xs font-bold text-amber-200 bg-stone-800 px-4 py-2 rounded-xl border border-stone-700 shadow-inner">1 / 1</span>
+        <button onclick="changePage(1)" id="btnNext" class="w-9 h-9 bg-stone-800 border border-stone-700 rounded-xl flex items-center justify-center text-amber-500 hover:bg-stone-700 disabled:opacity-30 transition-all shadow-lg"><i class="fa-solid fa-arrow-right text-xs"></i></button>
     </div>
 </main>
 
-<footer class="bg-[#022c22] text-emerald-400 py-10 px-6">
+<footer class="bg-black text-stone-500 py-10 px-6 border-t border-stone-900">
     <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
-        <div class="flex gap-4 mb-4 text-emerald-600">
+        <div class="flex gap-4 mb-4 text-stone-700">
             <i class="fa-solid fa-tractor text-2xl"></i>
             <i class="fa-solid fa-cow text-2xl"></i>
             <i class="fa-solid fa-seedling text-2xl"></i>
         </div>
-        <h3 class="text-white font-bold text-sm">Straw Market Thailand</h3>
-        <p class="text-[10px] mt-2 max-w-md opacity-60">แพลตฟอร์มกลางสำหรับเกษตรกรไทย เชื่อมต่อ Google Sheets</p>
+        <h3 class="text-stone-300 font-bold text-sm">Straw Market Thailand</h3>
+        <p class="text-[10px] mt-2 max-w-md opacity-60">แพลตฟอร์มกลางสำหรับเกษตรกรไทย • Dark Mode</p>
     </div>
 </footer>
 
@@ -191,11 +201,11 @@
     </button>
     <div class="relative w-full h-full flex items-center justify-center p-4">
         <button onclick="changeSlide(-1)" class="absolute left-6 text-white w-12 h-12 hidden md:flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full z-[110]"><i class="fa-solid fa-chevron-left text-xl"></i></button>
-        <img id="sliderMainImage" src="" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl transition-all duration-500" onerror="this.src='https://placehold.co/800x600/ecfdf5/064e3b?text=Image+Error'">
+        <img id="sliderMainImage" src="" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl transition-all duration-500" onerror="this.src='https://placehold.co/800x600/1c1917/fbbf24?text=Image+Error'">
         <button onclick="changeSlide(1)" class="absolute right-6 text-white w-12 h-12 hidden md:flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full z-[110]"><i class="fa-solid fa-chevron-right text-xl"></i></button>
     </div>
     <div class="absolute bottom-10 flex flex-col items-center gap-4 z-[110]">
-        <span id="sliderCounter" class="text-white text-[10px] bg-black/40 px-4 py-1.5 rounded-full font-mono border border-white/10 backdrop-blur-md">1 / 1</span>
+        <span id="sliderCounter" class="text-white text-[10px] bg-white/10 px-4 py-1.5 rounded-full font-mono border border-white/10 backdrop-blur-md">1 / 1</span>
         <div class="flex gap-3 md:hidden">
             <button onclick="changeSlide(-1)" class="w-12 h-12 bg-white/10 rounded-xl text-white flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button>
             <button onclick="changeSlide(1)" class="w-12 h-12 bg-white/10 rounded-xl text-white flex items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button>
@@ -204,17 +214,17 @@
 </div>
 
 <!-- View Detail Dialog -->
-<dialog id="viewDlg" class="bg-white rounded-[2rem] shadow-2xl p-0 w-[95%] max-w-2xl m-auto overflow-hidden">
-    <div class="relative h-60 sm:h-80 bg-emerald-50">
+<dialog id="viewDlg" class="rounded-[2rem] shadow-2xl p-0 w-[95%] max-w-2xl m-auto overflow-hidden">
+    <div class="relative h-60 sm:h-80 bg-stone-800">
         <div id="detailImageHero" class="w-full h-full cursor-pointer overflow-hidden">
             <img id="viewHeroImg" src="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" onerror="handleImgError(this)">
         </div>
         
         <div class="absolute top-4 right-4 flex gap-2 z-10">
-            <button id="btnDeletePost" class="bg-white/80 hover:bg-red-50 backdrop-blur-md text-red-500 w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md" title="ลบประกาศ">
+            <button id="btnDeletePost" class="bg-black/50 hover:bg-red-900/80 backdrop-blur-md text-red-500 w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md" title="ลบประกาศ">
                 <i class="fa-solid fa-trash-can text-sm"></i>
             </button>
-            <button onclick="closeViewModal()" class="bg-white/80 hover:bg-white backdrop-blur-md text-stone-900 w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md">
+            <button onclick="closeViewModal()" class="bg-black/50 hover:bg-stone-800 backdrop-blur-md text-white w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
         </div>
@@ -225,49 +235,49 @@
     <div class="p-6 sm:p-8 overflow-y-auto max-h-[60vh]">
         <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
             <div>
-                <h2 id="viewTitle" class="text-xl sm:text-2xl font-bold text-[#064e3b] leading-tight mb-1"></h2>
+                <h2 id="viewTitle" class="text-xl sm:text-2xl font-bold text-white leading-tight mb-1"></h2>
                 <div class="flex flex-wrap gap-2 mt-2">
-                    <span class="bg-emerald-50 text-emerald-700 text-[10px] px-2 py-0.5 rounded-lg border border-emerald-100 font-bold flex items-center gap-1">
+                    <span class="bg-amber-900/30 text-amber-400 text-[10px] px-2 py-0.5 rounded-lg border border-amber-800/50 font-bold flex items-center gap-1">
                         <i class="fa-solid fa-location-dot"></i> <span id="viewProvince"></span>
                     </span>
-                    <span id="viewAddressTag" class="bg-stone-50 text-stone-500 text-[10px] px-2 py-0.5 rounded-lg border border-stone-200 font-bold flex items-center gap-1">
+                    <span id="viewAddressTag" class="bg-stone-800 text-stone-400 text-[10px] px-2 py-0.5 rounded-lg border border-stone-700 font-bold flex items-center gap-1">
                         <i class="fa-solid fa-map-pin"></i> <span id="viewAddress"></span>
                     </span>
                 </div>
             </div>
             <div class="flex flex-col items-start md:items-end">
-                <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-widest mb-0.5">ราคาต่อก้อน</span>
-                <p id="viewPrice" class="text-2xl sm:text-3xl font-black text-[#064e3b]"></p>
+                <span class="text-[9px] font-bold text-stone-500 uppercase tracking-widest mb-0.5">ราคาต่อก้อน</span>
+                <p id="viewPrice" class="text-2xl sm:text-3xl font-black text-[#fbbf24]"></p>
             </div>
         </div>
         
         <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="bg-emerald-50/50 p-3 rounded-2xl border border-emerald-100 flex items-center gap-3">
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#15803d] shadow-sm flex-shrink-0 border border-emerald-100"><i class="fa-solid fa-user text-sm"></i></div>
+            <div class="bg-stone-900/50 p-3 rounded-2xl border border-stone-800 flex items-center gap-3">
+                <div class="w-10 h-10 bg-stone-800 rounded-xl flex items-center justify-center text-amber-500 shadow-sm flex-shrink-0 border border-stone-700"><i class="fa-solid fa-user text-sm"></i></div>
                 <div class="min-w-0">
-                    <p class="text-[9px] text-emerald-400 font-bold uppercase">ผู้ประกาศ</p>
-                    <p id="viewContact" class="font-bold text-[#064e3b] text-sm truncate"></p>
+                    <p class="text-[9px] text-stone-500 font-bold uppercase">ผู้ประกาศ</p>
+                    <p id="viewContact" class="font-bold text-stone-200 text-sm truncate"></p>
                 </div>
             </div>
-            <div class="bg-emerald-50/50 p-3 rounded-2xl border border-emerald-100 flex items-center gap-3">
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#15803d] shadow-sm flex-shrink-0 border border-emerald-100"><i class="fa-solid fa-phone text-sm"></i></div>
+            <div class="bg-stone-900/50 p-3 rounded-2xl border border-stone-800 flex items-center gap-3">
+                <div class="w-10 h-10 bg-stone-800 rounded-xl flex items-center justify-center text-amber-500 shadow-sm flex-shrink-0 border border-stone-700"><i class="fa-solid fa-phone text-sm"></i></div>
                 <div class="min-w-0">
-                    <p class="text-[9px] text-emerald-400 font-bold uppercase">เบอร์โทรติดต่อ</p>
-                    <p id="viewPhoneText" class="font-bold text-[#064e3b] text-sm truncate"></p>
+                    <p class="text-[9px] text-stone-500 font-bold uppercase">เบอร์โทรติดต่อ</p>
+                    <p id="viewPhoneText" class="font-bold text-stone-200 text-sm truncate"></p>
                 </div>
             </div>
         </div>
 
         <div class="mb-6">
-            <h4 class="text-xs font-bold text-[#064e3b] mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-align-left text-emerald-400"></i> รายละเอียดประกาศ
+            <h4 class="text-xs font-bold text-amber-500 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-align-left text-amber-600"></i> รายละเอียดประกาศ
             </h4>
-            <div id="viewBody" class="whitespace-pre-line text-[#022c22] bg-emerald-50/30 p-4 rounded-2xl border border-emerald-100 leading-relaxed text-xs"></div>
-            <p id="viewPublishDate" class="text-[9px] text-emerald-400 mt-3 italic text-right"></p>
+            <div id="viewBody" class="whitespace-pre-line text-stone-300 bg-black/30 p-4 rounded-2xl border border-stone-800 leading-relaxed text-xs"></div>
+            <p id="viewPublishDate" class="text-[9px] text-stone-500 mt-3 italic text-right"></p>
         </div>
 
         <div class="flex gap-3">
-            <a id="btnCall" href="#" class="flex-1 bg-[#064e3b] text-white py-3.5 rounded-xl text-center font-bold shadow-lg flex items-center justify-center gap-2 btn-animate transition-all hover:bg-[#022c22] text-sm">
+            <a id="btnCall" href="#" class="flex-1 bg-amber-500 text-stone-900 py-3.5 rounded-xl text-center font-bold shadow-lg flex items-center justify-center gap-2 btn-animate transition-all hover:bg-amber-400 text-sm">
                 <i class="fa-solid fa-phone-flip"></i> ติดต่อผู้ขาย
             </a>
         </div>
@@ -275,61 +285,61 @@
 </dialog>
 
 <!-- Add/Edit Dialog -->
-<dialog id="dlg" class="bg-white rounded-[2rem] shadow-2xl p-0 w-[95%] max-w-xl m-auto overflow-hidden">
-    <div class="px-6 py-5 border-b border-emerald-100 flex justify-between items-center bg-stone-50/50">
+<dialog id="dlg" class="rounded-[2rem] shadow-2xl p-0 w-[95%] max-w-xl m-auto overflow-hidden">
+    <div class="px-6 py-5 border-b border-stone-800 flex justify-between items-center bg-stone-900/50">
         <div>
-            <h3 id="dlgTitle" class="text-lg font-bold text-[#064e3b]">ลงประกาศขายฟาง</h3>
+            <h3 id="dlgTitle" class="text-lg font-bold text-[#fbbf24]">ลงประกาศขายฟาง</h3>
         </div>
-        <button onclick="closeModal()" class="text-emerald-300 hover:text-emerald-500 w-9 h-9 rounded-full flex items-center justify-center bg-white border border-emerald-100 shadow-sm"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <button onclick="closeModal()" class="text-stone-500 hover:text-stone-300 w-9 h-9 rounded-full flex items-center justify-center bg-stone-800 border border-stone-700 shadow-sm"><i class="fa-solid fa-xmark text-lg"></i></button>
     </div>
     
     <div class="p-6 overflow-y-auto max-h-[70vh] space-y-5" id="formContainer">
         <div class="space-y-3">
             <div>
-                <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">ชื่อรายการสินค้า <span class="text-red-500">*</span></label>
-                <input id="title" type="text" class="w-full px-4 py-3 bg-stone-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium text-[#064e3b]" placeholder="เช่น ฟางข้าวหอมมะลิอัดก้อน...">
+                <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1 ml-1 tracking-widest">ชื่อรายการสินค้า <span class="text-red-500">*</span></label>
+                <input id="title" type="text" class="w-full px-4 py-3 rounded-xl outline-none text-sm font-medium" placeholder="เช่น ฟางข้าวหอมมะลิอัดก้อน...">
             </div>
             
             <div class="grid grid-cols-2 gap-3">
                  <div>
-                    <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">จังหวัด <span class="text-red-500">*</span></label>
-                    <select id="input_province" class="w-full px-4 py-3 bg-stone-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium appearance-none cursor-pointer text-[#064e3b]">
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1 ml-1 tracking-widest">จังหวัด <span class="text-red-500">*</span></label>
+                    <select id="input_province" class="w-full px-4 py-3 rounded-xl outline-none text-sm font-medium appearance-none cursor-pointer">
                         <option value="">เลือกจังหวัด</option>
                     </select>
                 </div>
                 <div class="relative">
-                    <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">ราคาต่อก้อน <span class="text-red-500">*</span></label>
-                    <input id="price" type="number" class="w-full px-4 py-3 bg-stone-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium pr-14 text-[#064e3b]" placeholder="0">
-                    <span class="absolute right-4 bottom-3.5 text-[9px] font-bold text-emerald-400">บ./ก้อน</span>
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1 ml-1 tracking-widest">ราคาต่อก้อน <span class="text-red-500">*</span></label>
+                    <input id="price" type="number" class="w-full px-4 py-3 rounded-xl outline-none text-sm font-medium pr-14" placeholder="0">
+                    <span class="absolute right-4 bottom-3.5 text-[9px] font-bold text-stone-500">บ./ก้อน</span>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">ชื่อผู้ติดต่อ</label>
-                    <input id="contact_name" type="text" class="w-full px-4 py-3 bg-stone-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium text-[#064e3b]" placeholder="ชื่อผู้ติดต่อ">
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1 ml-1 tracking-widest">ชื่อผู้ติดต่อ</label>
+                    <input id="contact_name" type="text" class="w-full px-4 py-3 rounded-xl outline-none text-sm font-medium" placeholder="ชื่อผู้ติดต่อ">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
-                    <input id="phone" type="tel" class="w-full px-4 py-3 bg-stone-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium text-[#064e3b]" placeholder="เบอร์โทรศัพท์ติดต่อ">
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1 ml-1 tracking-widest">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
+                    <input id="phone" type="tel" class="w-full px-4 py-3 rounded-xl outline-none text-sm font-medium" placeholder="เบอร์โทรศัพท์ติดต่อ">
                 </div>
             </div>
 
             <div class="space-y-3">
-                <label class="block text-[10px] font-bold text-emerald-400 uppercase mb-1 ml-1 tracking-widest">พิกัดและรายละเอียด</label>
-                <input id="address" type="text" class="w-full px-4 py-3 bg-stone-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium text-[#064e3b]" placeholder="อำเภอ / ตำบล (พิกัดรับสินค้า)">
-                <textarea id="body" rows="3" class="w-full px-4 py-3 bg-stone-50 border border-emerald-100 rounded-xl outline-none text-sm font-medium resize-none text-[#064e3b]" placeholder="รายละเอียดประกาศอื่นๆ..."></textarea>
+                <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1 ml-1 tracking-widest">พิกัดและรายละเอียด</label>
+                <input id="address" type="text" class="w-full px-4 py-3 rounded-xl outline-none text-sm font-medium" placeholder="อำเภอ / ตำบล (พิกัดรับสินค้า)">
+                <textarea id="body" rows="3" class="w-full px-4 py-3 rounded-xl outline-none text-sm font-medium resize-none" placeholder="รายละเอียดประกาศอื่นๆ..."></textarea>
             </div>
         </div>
         
         <div>
             <div class="flex justify-between items-center mb-3">
-                <label class="block text-[10px] font-bold text-emerald-400 uppercase ml-1 tracking-widest">รูปภาพสินค้า</label>
-                <span id="imgCount" class="text-[9px] bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full font-bold">0 / 3</span>
+                <label class="block text-[10px] font-bold text-stone-500 uppercase ml-1 tracking-widest">รูปภาพสินค้า</label>
+                <span id="imgCount" class="text-[9px] bg-stone-800 text-amber-500 px-3 py-1 rounded-full font-bold border border-stone-700">0 / 3</span>
             </div>
             <div class="grid grid-cols-3 gap-2">
                 <div id="previewList" class="contents"></div>
-                <label id="uploadBtn" class="aspect-square border-2 border-dashed border-emerald-200 rounded-xl cursor-pointer bg-stone-50 hover:bg-emerald-100 hover:border-[#10b981] flex flex-col items-center justify-center text-emerald-400 transition-all group">
+                <label id="uploadBtn" class="aspect-square border-2 border-dashed border-stone-700 rounded-xl cursor-pointer bg-stone-900/50 hover:bg-stone-800 hover:border-amber-500 flex flex-col items-center justify-center text-stone-600 transition-all group">
                     <i class="fa-solid fa-camera text-xl group-hover:scale-110 transition-transform"></i>
                     <span class="text-[8px] mt-1.5 font-bold uppercase">เพิ่มรูป</span>
                     <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
@@ -338,9 +348,9 @@
         </div>
     </div>
     
-    <div class="p-6 border-t border-emerald-100 flex gap-3">
-        <button onclick="closeModal()" class="flex-1 px-4 py-3.5 border border-emerald-200 rounded-xl text-stone-500 font-bold text-sm">ยกเลิก</button>
-        <button onclick="savePost()" id="btnSave" class="flex-[2] bg-[#064e3b] text-white py-3.5 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 btn-animate transition-all hover:bg-[#022c22] text-sm">
+    <div class="p-6 border-t border-stone-800 flex gap-3 bg-stone-900/50">
+        <button onclick="closeModal()" class="flex-1 px-4 py-3.5 border border-stone-700 rounded-xl text-stone-400 font-bold text-sm hover:bg-stone-800">ยกเลิก</button>
+        <button onclick="savePost()" id="btnSave" class="flex-[2] bg-amber-500 text-stone-900 py-3.5 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 btn-animate transition-all hover:bg-amber-400 text-sm">
             <span id="btnSaveText">ลงประกาศ</span> 
             <i id="btnSaveIcon" class="fa-solid fa-check-circle"></i>
         </button>
@@ -348,7 +358,7 @@
 </dialog>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxcqrM1X5QarCzIWDcrFYSjdrGLTkPYY-hP1GbOPl2oqiNe2DcRbBzghHXPxCI_CPvA/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbySGZ60_4wuj9mYaZe3-BJJRtDF0weo3zTE7iAJCIIqJNiTxa5iMRPqHP84LicxbXaH/exec"; 
 
 const PROVINCES = ["กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง", "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์", "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี"].sort();
 
@@ -390,9 +400,8 @@ const dom = {
     viewDate: document.getElementById('viewPublishDate')
 };
 
-// Function สำหรับเปลี่ยนลิงก์รูปภาพในกรณีโหลดไม่ได้
 function handleImgError(img) {
-    img.src = 'https://placehold.co/800x600/ecfdf5/064e3b?text=No+Image';
+    img.src = 'https://placehold.co/800x600/1c1917/fbbf24?text=No+Image';
     img.classList.add('img-fallback');
 }
 
@@ -430,12 +439,8 @@ function populateProvinces() {
     dom.filterMobile.innerHTML = `<option value="all">ทุกที่</option>${html}`;
 }
 
-/**
- * ปรับปรุงการวิเคราะห์ข้อมูลรูปภาพให้รองรับหลายรูปแบบและแปลงลิงก์ Google Drive
- */
 function parseImages(imgData) {
     if (!imgData) return [];
-    
     let result = [];
     if (Array.isArray(imgData)) {
         result = imgData;
@@ -447,8 +452,6 @@ function parseImages(imgData) {
             result = [trimmed];
         }
     }
-    
-    // แปลงลิงก์ id= เป็น lh3
     return result.map(url => {
         if (typeof url === 'string' && url.includes('id=')) {
             const id = url.split('id=')[1].split('&')[0];
@@ -465,14 +468,9 @@ async function loadPosts() {
         const cacheBuster = `?t=${Date.now()}`;
         const res = await fetch(API_URL + cacheBuster);
         const data = await res.json();
-        
         posts = (Array.isArray(data) ? data : data.data || []).map(p => {
-            return { 
-                ...p, 
-                images: parseImages(p.images) 
-            };
+            return { ...p, images: parseImages(p.images) };
         }).reverse();
-        
     } catch (e) {
         console.error("Load failed:", e);
         posts = []; 
@@ -491,7 +489,6 @@ function applyFilters() {
         const addrStr = String(p.address || '');
         const provStr = String(p.province || '');
         const phoneStr = String(p.phone || '');
-        
         const textMatch = (titleStr + bodyStr + addrStr + provStr + phoneStr).toLowerCase().includes(q);
         const provMatch = prov === 'all' || p.province === prov;
         return textMatch && provMatch;
@@ -500,46 +497,39 @@ function applyFilters() {
     renderBoard();
 }
 
-/**
- * ปรับปรุงการดึงรูปมาแสดงตามเงื่อนไขที่รัดกุมขึ้น
- */
 function renderBoard() {
     dom.board.innerHTML = '';
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     const items = filteredPosts.slice(start, start + ITEMS_PER_PAGE);
-    
     if (items.length === 0) {
-        dom.board.innerHTML = `<div class="col-span-full py-16 text-center text-emerald-300 flex flex-col items-center gap-2">
+        dom.board.innerHTML = `<div class="col-span-full py-16 text-center text-stone-600 flex flex-col items-center gap-2">
             <p class="text-[10px] font-bold uppercase tracking-widest">ไม่พบรายการ</p>
         </div>`;
     } else {
         items.forEach(p => {
-            // ดึงรูปแรกมาทำ Thumbnail พร้อมเงื่อนไขเช็กรูปภาพที่รัดกุม
-            let thumb = 'https://placehold.co/400x400/ecfdf5/064e3b?text=No+Image';
+            let thumb = 'https://placehold.co/400x400/1c1917/fbbf24?text=No+Image';
             if (p.images && p.images.length > 0) {
                 thumb = p.images[0];
-                // ถ้าเป็นลิงก์เก่า drive.google.com/uc?id= ให้แปลงเป็น lh3 อัตโนมัติ (กรณีข้อมูลยังไม่ได้ถูกจัดการที่ parseImages)
                 if (typeof thumb === 'string' && thumb.includes('id=')) {
                     const id = thumb.split('id=')[1].split('&')[0];
                     thumb = `https://lh3.googleusercontent.com/d/${id}`;
                 }
             }
-
             const card = document.createElement('div');
-            card.className = "bg-white rounded-2xl overflow-hidden shadow-sm border border-emerald-50 flex flex-col cursor-pointer active:scale-95 transition-all duration-300";
+            card.className = "bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-700 flex flex-col cursor-pointer active:scale-95 transition-all duration-300";
             card.onclick = () => viewDetail(p.id);
             card.innerHTML = `
-                <div class="aspect-square bg-emerald-50 overflow-hidden relative">
-                    <img src="${thumb}" class="w-full h-full object-cover" 
-                         onerror="this.src='https://placehold.co/400x400/ecfdf5/064e3b?text=Error'">
-                    <div class="absolute bottom-1 right-1 bg-white/90 backdrop-blur-md px-1.5 py-0.5 rounded-lg text-[8px] font-bold shadow-sm text-[#064e3b]">
+                <div class="aspect-square bg-stone-900 overflow-hidden relative">
+                    <img src="${thumb}" class="w-full h-full object-cover opacity-90" 
+                         onerror="this.src='https://placehold.co/400x400/1c1917/fbbf24?text=Error'">
+                    <div class="absolute bottom-1 right-1 bg-black/60 backdrop-blur-md px-1.5 py-0.5 rounded-lg text-[8px] font-bold shadow-sm text-amber-400 border border-white/5">
                         ${p.province}
                     </div>
                 </div>
-                <div class="p-2 flex flex-col flex-grow bg-white">
-                    <h3 class="font-bold text-[#064e3b] text-[10px] sm:text-xs line-clamp-2 leading-tight mb-1 h-6 sm:h-8">${p.title}</h3>
+                <div class="p-2 flex flex-col flex-grow">
+                    <h3 class="font-bold text-amber-100 text-[10px] sm:text-xs line-clamp-2 leading-tight mb-1 h-6 sm:h-8">${p.title}</h3>
                     <div class="mt-auto flex items-baseline gap-0.5">
-                        <span class="text-[#059669] font-black text-xs sm:text-base">฿${Number(p.price || 0).toLocaleString()}</span>
+                        <span class="text-amber-500 font-black text-xs sm:text-base">฿${Number(p.price || 0).toLocaleString()}</span>
                     </div>
                 </div>
             `;
@@ -568,9 +558,7 @@ function closeModal() { dom.dlg.close(); setScrollLock(false); }
 function viewDetail(id) {
     const p = posts.find(x => x.id === id);
     if (!p) return;
-    
-    // ตั้งค่ารูปภาพ Hero พร้อมการแปลงลิงก์
-    let heroSrc = 'https://placehold.co/800x600/ecfdf5/064e3b?text=Straw+Market';
+    let heroSrc = 'https://placehold.co/800x600/1c1917/fbbf24?text=Straw+Market';
     if (p.images && p.images.length > 0) {
         heroSrc = p.images[0];
         if (typeof heroSrc === 'string' && heroSrc.includes('id=')) {
@@ -579,13 +567,11 @@ function viewDetail(id) {
         }
     }
     dom.viewHero.src = heroSrc;
-    
     document.getElementById('viewTitle').textContent = p.title;
     document.getElementById('viewPrice').textContent = `฿${Number(p.price || 0).toLocaleString()}`;
     document.getElementById('viewContact').textContent = p.contact_name || 'ไม่ระบุชื่อ';
     document.getElementById('viewPhoneText').textContent = p.phone || 'ไม่ระบุเบอร์โทร';
     document.getElementById('viewProvince').textContent = p.province;
-    
     const addrTag = document.getElementById('viewAddressTag');
     if (p.address) {
         document.getElementById('viewAddress').textContent = p.address;
@@ -593,45 +579,35 @@ function viewDetail(id) {
     } else {
         addrTag.style.display = 'none';
     }
-
     document.getElementById('viewBody').textContent = p.body || 'ไม่มีรายละเอียดเพิ่มเติม';
     dom.viewDate.textContent = "ลงประกาศเมื่อ: " + (p.id ? new Date(p.id).toLocaleDateString('th-TH', { year:'numeric', month:'short', day:'numeric', hour: '2-digit', minute: '2-digit' }) : "-");
-    
     const phoneToCall = p.phone || (p.body ? String(p.body).match(/0\d{8,9}/)?.[0] : null);
     const callBtn = document.getElementById('btnCall');
     callBtn.href = phoneToCall ? `tel:${phoneToCall}` : "#";
     callBtn.style.opacity = phoneToCall ? "1" : "0.5";
     callBtn.innerHTML = phoneToCall ? `<i class="fa-solid fa-phone-flip"></i> ติดต่อ ${phoneToCall}` : `<i class="fa-solid fa-phone-slash"></i> ไม่มีเบอร์ติดต่อ`;
-
     const imgBox = document.getElementById('viewImages');
     imgBox.innerHTML = '';
     sliderImages = (p.images && p.images.length > 0) ? p.images : [];
-    
     if (sliderImages.length > 0) {
         sliderImages.forEach((url, i) => {
             const img = document.createElement('img');
-            // แปลงลิงก์ thumbnail
             let thumbUrl = url;
             if (typeof thumbUrl === 'string' && thumbUrl.includes('id=')) {
                 const id = thumbUrl.split('id=')[1].split('&')[0];
                 thumbUrl = `https://lh3.googleusercontent.com/d/${id}`;
             }
             img.src = thumbUrl;
-            img.className = `h-10 w-14 rounded-lg object-cover border-2 transition-all cursor-pointer flex-shrink-0 ${i===0?'border-[#10b981]':'border-transparent bg-white/20'}`;
+            img.className = `h-10 w-14 rounded-lg object-cover border-2 transition-all cursor-pointer flex-shrink-0 ${i===0?'border-amber-500':'border-stone-700 bg-stone-900'}`;
             img.onclick = (e) => { e.stopPropagation(); openSlider(i); };
-            img.onerror = () => { img.src = 'https://placehold.co/100x100/ecfdf5/064e3b?text=Error'; };
+            img.onerror = () => { img.src = 'https://placehold.co/100x100/1c1917/fbbf24?text=Error'; };
             imgBox.appendChild(img);
         });
         document.getElementById('detailImageHero').onclick = () => openSlider(0);
     } else {
         document.getElementById('detailImageHero').onclick = null;
     }
-
-    document.getElementById('btnDeletePost').onclick = (e) => {
-        e.stopPropagation();
-        confirmDelete(p.id);
-    };
-    
+    document.getElementById('btnDeletePost').onclick = (e) => { e.stopPropagation(); confirmDelete(p.id); };
     dom.viewDlg.showModal();
     setScrollLock(true);
 }
@@ -646,26 +622,18 @@ async function confirmDelete(id) {
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#064e3b',
+        cancelButtonColor: '#292524',
         confirmButtonText: 'ลบทิ้ง',
-        cancelButtonText: 'ยกเลิก'
+        cancelButtonText: 'ยกเลิก',
+        background: '#1c1917',
+        color: '#fef3c7'
     });
-    
     if (res.isConfirmed) {
-        Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, background: '#1c1917', color: '#fef3c7', didOpen: () => Swal.showLoading() });
         try {
-            await fetch(API_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ action: 'delete', id: id })
-            });
-            setTimeout(() => {
-                loadPosts();
-                Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1500, showConfirmButton: false });
-            }, 1000);
-        } catch (err) {
-            Swal.fire('Error', 'ไม่สามารถลบข้อมูลได้', 'error');
-        }
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
+            setTimeout(() => { loadPosts(); Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1500, showConfirmButton: false, background: '#1c1917', color: '#fef3c7' }); }, 1000);
+        } catch (err) { Swal.fire('Error', 'ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง', 'error', { background: '#1c1917', color: '#fef3c7' }); }
     }
 }
 
@@ -674,10 +642,7 @@ function appendImages(input) {
     const limit = 3 - formImages.length;
     files.slice(0, limit).forEach(file => {
         const reader = new FileReader();
-        reader.onload = (e) => {
-            formImages.push(e.target.result);
-            renderPreview();
-        };
+        reader.onload = (e) => { formImages.push(e.target.result); renderPreview(); };
         reader.readAsDataURL(file);
     });
 }
@@ -686,7 +651,7 @@ function renderPreview() {
     dom.imgPreview.innerHTML = '';
     formImages.forEach((src, i) => {
         const div = document.createElement('div');
-        div.className = "relative aspect-square rounded-xl overflow-hidden border border-emerald-100 shadow-sm";
+        div.className = "relative aspect-square rounded-xl overflow-hidden border border-stone-700 shadow-sm";
         div.innerHTML = `<img src="${src}" class="w-full h-full object-cover">
             <button onclick="removeImg(${i})" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-md text-[8px] flex items-center justify-center shadow-md"><i class="fa-solid fa-xmark"></i></button>`;
         dom.imgPreview.appendChild(div);
@@ -698,64 +663,25 @@ function renderPreview() {
 function removeImg(i) { formImages.splice(i, 1); renderPreview(); }
 
 async function savePost() {
-    const validations = [
-        { el: dom.title, name: 'ชื่อรายการสินค้า' },
-        { el: dom.province, name: 'จังหวัด' },
-        { el: dom.price, name: 'ราคาต่อก้อน' },
-        { el: dom.phone, name: 'เบอร์โทรศัพท์' }
-    ];
+    const validations = [{ el: dom.title, name: 'ชื่อรายการสินค้า' }, { el: dom.province, name: 'จังหวัด' }, { el: dom.price, name: 'ราคาต่อก้อน' }, { el: dom.phone, name: 'เบอร์โทรศัพท์' }];
     validations.forEach(v => v.el.classList.remove('field-error'));
     const missing = validations.filter(v => !v.el || !v.el.value.trim());
-
     if (missing.length > 0) {
-        missing.forEach((m, idx) => {
-            if (m.el) {
-                m.el.classList.add('field-error');
-                if (idx === 0) m.el.focus();
-            }
-        });
+        missing.forEach((m, idx) => { if (m.el) { m.el.classList.add('field-error'); if (idx === 0) m.el.focus(); } });
         return;
     }
-
     const btn = document.getElementById('btnSave');
     if (!btn || !dom.btnSaveText) return;
-
     btn.disabled = true;
     const originalText = dom.btnSaveText.textContent;
     dom.btnSaveText.textContent = "กำลังส่งข้อมูล...";
-
-    const payload = {
-        action: 'add',
-        id: Date.now(),
-        title: dom.title.value,
-        price: Number(dom.price.value),
-        province: dom.province.value,
-        address: dom.address.value,
-        contact_name: dom.contactName.value,
-        phone: dom.phone.value,
-        body: dom.body.value,
-        images: formImages
-    };
-
+    const payload = { action: 'add', id: Date.now(), title: dom.title.value, price: Number(dom.price.value), province: dom.province.value, address: dom.address.value, contact_name: dom.contactName.value, phone: dom.phone.value, body: dom.body.value, images: formImages };
     try {
-        await fetch(API_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify(payload)
-        });
-
+        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
         closeModal();
-        Swal.fire({ title: 'สำเร็จ', text: 'กำลังรีเฟรชโพสต์ของคุณ...', icon: 'success', timer: 2000, showConfirmButton: false });
-        
-        setTimeout(() => {
-            loadPosts();
-        }, 1500);
-    } catch (err) {
-        Swal.fire('Error', 'การบันทึกล้มเหลว', 'error');
-    } finally {
-        btn.disabled = false;
-        dom.btnSaveText.textContent = originalText;
-    }
+        Swal.fire({ title: 'สำเร็จ', text: 'กำลังรีเฟรชโพสต์ของคุณ...', icon: 'success', timer: 2000, showConfirmButton: false, background: '#1c1917', color: '#fef3c7' });
+        setTimeout(() => { loadPosts(); }, 1500);
+    } catch (err) { Swal.fire('Error', 'การบันทึกล้มเหลว', 'error', { background: '#1c1917', color: '#fef3c7' }); } finally { btn.disabled = false; dom.btnSaveText.textContent = originalText; }
 }
 
 function openSlider(i) {
@@ -800,9 +726,7 @@ function resetForm() {
     dom.title.value = ''; dom.price.value = ''; dom.province.value = '';
     dom.contactName.value = ''; dom.phone.value = ''; dom.address.value = ''; dom.body.value = '';
     formImages = []; 
-    [dom.title, dom.price, dom.province, dom.phone].forEach(el => {
-        if (el) el.classList.remove('field-error');
-    });
+    [dom.title, dom.price, dom.province, dom.phone].forEach(el => { if (el) el.classList.remove('field-error'); });
     renderPreview();
 }
 
