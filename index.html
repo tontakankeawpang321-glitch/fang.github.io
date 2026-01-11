@@ -337,7 +337,7 @@
     </div>
     
     <div class="p-6 border-t border-emerald-100 flex gap-3">
-        <button onclick="closeModal()" class="flex-1 px-4 py-3.5 border border-emerald-200 rounded-xl text-emerald-500 font-bold text-sm">ยกเลิก</button>
+        <button onclick="closeModal()" class="flex-1 px-4 py-3.5 border border-emerald-200 rounded-xl text-stone-500 font-bold text-sm">ยกเลิก</button>
         <button onclick="savePost()" id="btnSave" class="flex-[2] bg-[#064e3b] text-white py-3.5 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 btn-animate transition-all hover:bg-[#022c22] text-sm">
             <span id="btnSaveText">ลงประกาศ</span> 
             <i id="btnSaveIcon" class="fa-solid fa-check-circle"></i>
@@ -550,6 +550,7 @@ function viewDetail(id) {
         document.getElementById('detailImageHero').onclick = null;
     }
 
+    // ตั้งค่าปุ่มลบประกาศ
     document.getElementById('btnDeletePost').onclick = (e) => {
         e.stopPropagation();
         confirmDelete(p.id);
@@ -561,7 +562,13 @@ function viewDetail(id) {
 
 function closeViewModal() { dom.viewDlg.close(); setScrollLock(false); }
 
+/**
+ * แก้ไขฟังก์ชัน confirmDelete ให้ปิดหน้าต่างแรกทันที
+ */
 async function confirmDelete(id) {
+    // ปิดหน้าต่างรายละเอียดทันทีเหมือนตอนดูรูป
+    closeViewModal(); 
+    
     const res = await Swal.fire({
         title: 'ยืนยันการลบประกาศ?',
         text: 'ข้อมูลประกาศนี้จะถูกลบออกจาก Google Sheets อย่างถาวร',
@@ -584,7 +591,6 @@ async function confirmDelete(id) {
             });
             posts = posts.filter(p => p.id !== id);
             applyFilters();
-            closeViewModal();
             Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1500, showConfirmButton: false });
         } catch (err) {
             Swal.fire('Error', 'ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง', 'error');
