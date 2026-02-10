@@ -13,13 +13,12 @@
 
 <style>
     :root {
-        /* ปรับโทนเข้มขัน สบายตา (Dark Straw Theme) */
-        --primary: #fbbf24; /* Amber 400 - สีเหลืองทองนวล */
-        --secondary: #d97706; /* Amber 600 - สีน้ำตาลทอง */
+        --primary: #fbbf24; /* Amber 400 */
+        --secondary: #d97706; /* Amber 600 */
         --accent: #f59e0b; /* Amber 500 */
-        --bg-dark: #1c1917; /* Stone 900 - พื้นหลังมืดสนิท */
-        --bg-card: #292524; /* Stone 800 - สีการ์ด */
-        --text-main: #fef3c7; /* Amber 100 - ตัวอักษรสีครีมนวล */
+        --bg-dark: #1c1917; /* Stone 900 */
+        --bg-card: #292524; /* Stone 800 */
+        --text-main: #fef3c7; /* Amber 100 */
         --text-muted: #a8a29e; /* Stone 400 */
     }
 
@@ -28,6 +27,7 @@
         background-color: var(--bg-dark); 
         color: var(--text-main); 
         -webkit-tap-highlight-color: transparent; 
+        padding-bottom: 70px; /* เผื่อพื้นที่ให้ Bottom Nav */
     }
 
     body.no-scroll {
@@ -105,6 +105,14 @@
         align-items: center;
         justify-content: center;
     }
+
+    /* Bottom Navigation Styles */
+    .bottom-nav-item {
+        @apply flex flex-col items-center justify-center flex-1 transition-colors;
+    }
+    .bottom-nav-item.active {
+        color: var(--primary);
+    }
 </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -122,33 +130,17 @@
         </div>
       </div>
       
-      <!-- Desktop Actions -->
-      <div class="hidden lg:flex items-center gap-4">
-         <div class="flex bg-stone-800 p-1 rounded-2xl border border-stone-700">
-             <select id="filter_province_desktop" class="bg-transparent px-4 py-2 text-sm outline-none cursor-pointer border-r border-stone-700 text-[#fbbf24] font-medium">
-                <option value="all">ทุกจังหวัด</option>
-             </select>
-             <div class="relative">
-                 <input id="q_desktop" type="text" placeholder="ค้นหาฟางก้อน..." class="bg-transparent pl-10 pr-4 py-2 text-sm w-56 outline-none text-white">
-                 <i class="fa-solid fa-search absolute left-4 top-2.5 text-stone-500"></i>
-             </div>
-         </div>
-         <button onclick="openNewPostModal()" class="bg-[#d97706] hover:bg-[#b45309] text-stone-900 px-6 py-2.5 rounded-xl shadow-xl flex items-center gap-2 btn-animate font-bold transition-all-300 text-sm">
-            <i class="fa-solid fa-plus-circle"></i> ลงประกาศ
-         </button>
-      </div>
-      
-      <!-- Mobile Actions -->
-      <div class="lg:hidden flex items-center gap-2">
-         <button onclick="openNewPostModal()" class="bg-[#d97706] text-stone-900 w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
-            <i class="fa-solid fa-plus text-lg"></i>
+      <!-- Desktop Fav Button -->
+      <div class="flex items-center gap-3">
+         <button onclick="showFavorites()" class="bg-stone-800 hover:bg-stone-700 text-[#fbbf24] px-4 sm:px-6 py-2.5 rounded-xl border border-stone-700 flex items-center gap-2 btn-animate font-bold transition-all-300 text-sm">
+            <i class="fa-solid fa-heart"></i> <span class="hidden sm:inline">รายการโปรด</span>
          </button>
       </div>
   </div>
 </nav>
 
 <!-- Mobile Search Bar -->
-<div class="lg:hidden bg-stone-900/90 backdrop-blur-md border-b border-stone-800 p-2 sticky top-16 z-40">
+<div class="bg-stone-900/90 backdrop-blur-md border-b border-stone-800 p-2 sticky top-16 z-40">
     <div class="flex gap-1.5 max-w-2xl mx-auto">
         <select id="filter_province_mobile" class="border border-stone-700 rounded-xl px-2 py-1.5 text-[10px] bg-stone-800 outline-none w-[35%] font-medium text-[#fbbf24]">
             <option value="all">ทุกที่</option>
@@ -182,17 +174,19 @@
     </div>
 </main>
 
-<footer class="bg-black text-stone-500 py-10 px-6 border-t border-stone-900">
-    <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
-        <div class="flex gap-4 mb-4 text-stone-700">
-            <i class="fa-solid fa-tractor text-2xl"></i>
-            <i class="fa-solid fa-cow text-2xl"></i>
-            <i class="fa-solid fa-seedling text-2xl"></i>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-stone-900 border-t border-stone-800 h-16 flex items-center justify-around z-50 custom-shadow">
+    <button onclick="refreshApp()" id="nav-home" class="flex flex-col items-center gap-1 text-amber-500 transition-all active:scale-90">
+        <i class="fa-solid fa-house text-xl"></i>
+        <span class="text-[10px] font-bold uppercase">หน้าแรก</span>
+    </button>
+    <button onclick="openNewPostModal()" id="nav-add" class="flex flex-col items-center gap-1 text-stone-400 transition-all active:scale-90">
+        <div class="bg-[#d97706] text-stone-900 w-10 h-10 rounded-full flex items-center justify-center -mt-8 shadow-xl border-4 border-stone-900">
+            <i class="fa-solid fa-plus text-xl"></i>
         </div>
-        <h3 class="text-stone-300 font-bold text-sm">Straw Market Thailand</h3>
-        <p class="text-[10px] mt-2 max-w-md opacity-60">แพลตฟอร์มกลางสำหรับเกษตรกรไทย • Dark Mode</p>
-    </div>
-</footer>
+        <span class="text-[10px] font-bold uppercase mt-0.5">ลงประกาศ</span>
+    </button>
+</div>
 
 <!-- Image Slider Modal -->
 <div id="imageSlider" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center slider-hidden transition-all duration-300 touch-none">
@@ -205,7 +199,7 @@
         <button onclick="changeSlide(1)" class="absolute right-6 text-white w-12 h-12 hidden md:flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full z-[110]"><i class="fa-solid fa-chevron-right text-xl"></i></button>
     </div>
     <div class="absolute bottom-10 flex flex-col items-center gap-4 z-[110]">
-        <span id="sliderCounter" class="text-white text-[10px] bg-white/10 px-4 py-1.5 rounded-full font-mono border border-white/10 backdrop-blur-md">1 / 1</span>
+        <span id="sliderCounter" class="text-white text-[10px] bg-black/40 px-4 py-1.5 rounded-full font-mono border border-white/10 backdrop-blur-md">1 / 1</span>
         <div class="flex gap-3 md:hidden">
             <button onclick="changeSlide(-1)" class="w-12 h-12 bg-white/10 rounded-xl text-white flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button>
             <button onclick="changeSlide(1)" class="w-12 h-12 bg-white/10 rounded-xl text-white flex items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button>
@@ -221,6 +215,10 @@
         </div>
         
         <div class="absolute top-4 right-4 flex gap-2 z-10">
+            <!-- ปุ่มรายการโปรด (หัวใจ) -->
+            <button id="btnFavToggle" class="bg-black/50 hover:bg-stone-800 backdrop-blur-md text-white w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md" title="เพิ่มในรายการโปรด">
+                <i class="fa-regular fa-heart text-sm"></i>
+            </button>
             <button id="btnDeletePost" class="bg-black/50 hover:bg-red-900/80 backdrop-blur-md text-red-500 w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md" title="ลบประกาศ">
                 <i class="fa-solid fa-trash-can text-sm"></i>
             </button>
@@ -281,6 +279,21 @@
                 <i class="fa-solid fa-phone-flip"></i> ติดต่อผู้ขาย
             </a>
         </div>
+    </div>
+</dialog>
+
+<!-- Favorites Dialog -->
+<dialog id="favDlg" class="rounded-[2rem] shadow-2xl p-0 w-[95%] max-w-lg m-auto overflow-hidden">
+    <div class="px-6 py-5 border-b border-stone-800 flex justify-between items-center bg-stone-900/50">
+        <h3 class="text-lg font-bold text-[#fbbf24] flex items-center gap-2">
+            <i class="fa-solid fa-heart"></i> รายการที่บันทึกไว้
+        </h3>
+        <button onclick="document.getElementById('favDlg').close(); setScrollLock(false);" class="text-stone-500 hover:text-stone-300 w-9 h-9 rounded-full flex items-center justify-center bg-stone-800 border border-stone-700 shadow-sm">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+    </div>
+    <div class="p-4 max-h-[70vh] overflow-y-auto space-y-3" id="favoritesList">
+        <!-- รายการโปรดจะแสดงที่นี่ -->
     </div>
 </dialog>
 
@@ -364,6 +377,7 @@ const PROVINCES = ["กรุงเทพมหานคร", "กระบี�
 
 let posts = [];
 let filteredPosts = [];
+let favorites = JSON.parse(localStorage.getItem('straw_market_favorites') || '[]');
 let currentPage = 1;
 const ITEMS_PER_PAGE = 12; 
 let formImages = [];
@@ -378,6 +392,8 @@ const dom = {
     btnNext: document.getElementById('btnNext'),
     dlg: document.getElementById('dlg'),
     viewDlg: document.getElementById('viewDlg'),
+    favDlg: document.getElementById('favDlg'),
+    favoritesList: document.getElementById('favoritesList'),
     btnSaveText: document.getElementById('btnSaveText'),
     title: document.getElementById('title'),
     price: document.getElementById('price'),
@@ -389,15 +405,14 @@ const dom = {
     imgPreview: document.getElementById('previewList'),
     imgCount: document.getElementById('imgCount'),
     uploadBtn: document.getElementById('uploadBtn'),
-    filterDesktop: document.getElementById('filter_province_desktop'),
     filterMobile: document.getElementById('filter_province_mobile'),
-    qDesktop: document.getElementById('q_desktop'),
     qMobile: document.getElementById('q_mobile'),
     slider: document.getElementById('imageSlider'),
     sliderImg: document.getElementById('sliderMainImage'),
     sliderCount: document.getElementById('sliderCounter'),
     viewHero: document.getElementById('viewHeroImg'),
-    viewDate: document.getElementById('viewPublishDate')
+    viewDate: document.getElementById('viewPublishDate'),
+    btnFavToggle: document.getElementById('btnFavToggle')
 };
 
 function handleImgError(img) {
@@ -413,10 +428,14 @@ function setScrollLock(lock) {
 function init() {
     populateProvinces();
     loadPosts();
-    [dom.qDesktop, dom.qMobile].forEach(el => el.addEventListener('input', debounce(applyFilters, 400)));
-    [dom.filterDesktop, dom.filterMobile].forEach(el => el.addEventListener('change', (e) => {
-        dom.filterDesktop.value = e.target.value;
-        dom.filterMobile.value = e.target.value;
+    
+    // Search filter listener (mobile mostly now)
+    [document.getElementById('q_desktop'), dom.qMobile].forEach(el => el && el.addEventListener('input', debounce(applyFilters, 400)));
+    [document.getElementById('filter_province_desktop'), dom.filterMobile].forEach(el => el && el.addEventListener('change', (e) => {
+        const val = e.target.value;
+        const desk = document.getElementById('filter_province_desktop');
+        if(desk) desk.value = val;
+        dom.filterMobile.value = val;
         applyFilters();
     }));
 
@@ -435,7 +454,8 @@ function init() {
 function populateProvinces() {
     const html = PROVINCES.map(p => `<option value="${p}">${p}</option>`).join('');
     dom.province.innerHTML = `<option value="">จังหวัด</option>${html}`;
-    dom.filterDesktop.innerHTML = `<option value="all">ทุกจังหวัด</option>${html}`;
+    const deskProv = document.getElementById('filter_province_desktop');
+    if(deskProv) deskProv.innerHTML = `<option value="all">ทุกจังหวัด</option>${html}`;
     dom.filterMobile.innerHTML = `<option value="all">ทุกที่</option>${html}`;
 }
 
@@ -481,8 +501,11 @@ async function loadPosts() {
 }
 
 function applyFilters() {
-    const q = (dom.qDesktop.value || dom.qMobile.value).toLowerCase();
-    const prov = dom.filterDesktop.value;
+    const deskQ = document.getElementById('q_desktop');
+    const q = (deskQ ? deskQ.value : dom.qMobile.value).toLowerCase();
+    const deskF = document.getElementById('filter_province_desktop');
+    const prov = deskF ? deskF.value : dom.filterMobile.value;
+    
     filteredPosts = posts.filter(p => {
         const titleStr = String(p.title || '');
         const bodyStr = String(p.body || '');
@@ -552,11 +575,22 @@ function changePage(delta) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function openNewPostModal() { resetForm(); dom.dlg.showModal(); setScrollLock(true); }
-function closeModal() { dom.dlg.close(); setScrollLock(false); }
+function openNewPostModal() { 
+    resetForm(); 
+    dom.dlg.showModal(); 
+    setScrollLock(true);
+    document.getElementById('nav-home').classList.replace('text-amber-500', 'text-stone-400');
+    document.getElementById('nav-add').classList.add('text-amber-500');
+}
+function closeModal() { 
+    dom.dlg.close(); 
+    setScrollLock(false);
+    document.getElementById('nav-home').classList.replace('text-stone-400', 'text-amber-500');
+    document.getElementById('nav-add').classList.remove('text-amber-500');
+}
 
 function viewDetail(id) {
-    const p = posts.find(x => x.id === id);
+    const p = posts.find(x => x.id === id) || favorites.find(x => x.id === id);
     if (!p) return;
     let heroSrc = 'https://placehold.co/800x600/1c1917/fbbf24?text=Straw+Market';
     if (p.images && p.images.length > 0) {
@@ -586,6 +620,11 @@ function viewDetail(id) {
     callBtn.href = phoneToCall ? `tel:${phoneToCall}` : "#";
     callBtn.style.opacity = phoneToCall ? "1" : "0.5";
     callBtn.innerHTML = phoneToCall ? `<i class="fa-solid fa-phone-flip"></i> ติดต่อ ${phoneToCall}` : `<i class="fa-solid fa-phone-slash"></i> ไม่มีเบอร์ติดต่อ`;
+    
+    // Update Favorite Icon
+    updateFavButtonState(p.id);
+    dom.btnFavToggle.onclick = (e) => { e.stopPropagation(); toggleFavorite(p); };
+
     const imgBox = document.getElementById('viewImages');
     imgBox.innerHTML = '';
     sliderImages = (p.images && p.images.length > 0) ? p.images : [];
@@ -612,6 +651,59 @@ function viewDetail(id) {
     setScrollLock(true);
 }
 
+function updateFavButtonState(id) {
+    const isFav = favorites.some(f => f.id === id);
+    const icon = dom.btnFavToggle.querySelector('i');
+    if (isFav) {
+        icon.classList.replace('fa-regular', 'fa-solid');
+        icon.classList.add('text-red-500');
+    } else {
+        icon.classList.replace('fa-solid', 'fa-regular');
+        icon.classList.remove('text-red-500');
+    }
+}
+
+function toggleFavorite(post) {
+    const idx = favorites.findIndex(f => f.id === post.id);
+    if (idx > -1) {
+        favorites.splice(idx, 1);
+    } else {
+        favorites.push(post);
+    }
+    localStorage.setItem('straw_market_favorites', JSON.stringify(favorites));
+    updateFavButtonState(post.id);
+}
+
+function showFavorites() {
+    dom.favoritesList.innerHTML = '';
+    if (favorites.length === 0) {
+        dom.favoritesList.innerHTML = '<p class="text-center text-stone-500 py-10 text-sm">ยังไม่มีรายการโปรด</p>';
+    } else {
+        favorites.forEach(p => {
+            const item = document.createElement('div');
+            item.className = "flex gap-3 bg-stone-800 p-3 rounded-2xl border border-stone-700 cursor-pointer active:scale-95 transition-all";
+            item.onclick = () => { dom.favDlg.close(); viewDetail(p.id); };
+            
+            const img = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/100x100/1c1917/fbbf24?text=No+Image';
+            
+            item.innerHTML = `
+                <img src="${img}" class="w-16 h-16 rounded-xl object-cover" onerror="this.src='https://placehold.co/100x100/1c1917/fbbf24?text=Err'">
+                <div class="flex-grow min-w-0">
+                    <h4 class="font-bold text-amber-100 text-sm truncate">${p.title}</h4>
+                    <p class="text-amber-500 font-bold text-xs">฿${Number(p.price || 0).toLocaleString()}</p>
+                    <p class="text-[10px] text-stone-500 mt-1"><i class="fa-solid fa-location-dot text-[8px]"></i> ${p.province}</p>
+                </div>
+                <button onclick="event.stopPropagation(); toggleFavorite(${JSON.stringify(p).replace(/"/g, '&quot;')}); showFavorites();" class="text-red-500 p-2">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            `;
+            dom.favoritesList.appendChild(item);
+        });
+    }
+    dom.favDlg.showModal();
+    setScrollLock(true);
+}
+
 function closeViewModal() { dom.viewDlg.close(); setScrollLock(false); }
 
 async function confirmDelete(id) {
@@ -632,6 +724,9 @@ async function confirmDelete(id) {
         Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, background: '#1c1917', color: '#fef3c7', didOpen: () => Swal.showLoading() });
         try {
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
+            // ลบออกจาก favorites ด้วยถ้ามี
+            favorites = favorites.filter(f => f.id !== id);
+            localStorage.setItem('straw_market_favorites', JSON.stringify(favorites));
             setTimeout(() => { loadPosts(); Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1500, showConfirmButton: false, background: '#1c1917', color: '#fef3c7' }); }, 1000);
         } catch (err) { Swal.fire('Error', 'ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง', 'error', { background: '#1c1917', color: '#fef3c7' }); }
     }
@@ -731,8 +826,17 @@ function resetForm() {
 }
 
 function refreshApp() {
-    dom.qDesktop.value = ''; dom.qMobile.value = '';
-    dom.filterDesktop.value = 'all'; dom.filterMobile.value = 'all';
+    document.getElementById('nav-home').classList.add('text-amber-500');
+    document.getElementById('nav-add').classList.replace('text-amber-500', 'text-stone-400');
+    
+    const deskQ = document.getElementById('q_desktop');
+    if(deskQ) deskQ.value = '';
+    dom.qMobile.value = '';
+    
+    const deskF = document.getElementById('filter_province_desktop');
+    if(deskF) deskF.value = 'all';
+    dom.filterMobile.value = 'all';
+    
     loadPosts();
 }
 
